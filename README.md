@@ -26,7 +26,7 @@ resultater lenger ned i README.
 
 ##  Prosjektstruktur
 Prosjektmappen består av følgende filer.
-
+```text
 Project/
 ├── data/
 │   ├── oslo_bydeler_befolkning_2024.geojson   # Befolknings- og bydelsdata
@@ -42,7 +42,7 @@ Project/
 ├── visualisering.py                           # Plotfunksjoner for indikatorer, bygg, tidsprofiler
 │
 └── README.md                                  # Dokumentasjon av prosjektet
-
+```
 
 ---
 
