@@ -121,7 +121,7 @@ The following datasets are used in the analysis:
 - **Buildings (OpenStreetMap via OSMnx)**
    Building footprints and building types within the two selected districts. Used for building indicators and map layers.
 
-- **Population and District Boundaries (SSB / Oslo Municipality)
+- **Population and District Boundaries (SSB / Oslo Municipality)**
    Population counts per district (2024), used for per-capita indicators, mapping, and associating trip start/end points and building with districts.
    link: https://kart.ssb.no/wayfinder/default?x=23.514300&y=67.351581&z=3.6
 
