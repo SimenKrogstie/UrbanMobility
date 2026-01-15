@@ -52,7 +52,7 @@ Project/
 Prosjektet bruker kun pakker som inngår i conda-miljøet **gmgi221**.
 Alle nødvendige avhengigheter er definert i `gmgi221.yml`.
 
-### Opprett og aktiver conda-miljøet
+#### Opprett og aktiver conda-miljøet
 
 ```bash
 conda env create -f gmgi221.yml
