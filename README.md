@@ -69,22 +69,26 @@ Følgende Python-biblioteker brukes i prosjektet:
 ```bash
 conda env create -f gmgi221.yml
 conda activate gmgi221
-
+```
 
 ---
 
 ## Hvordan kjøre prosjektet
-1. Åpne terminalen og naviger til prosjektmappen.
-2. Start JupyterLab.
-3. Åpne og kjør `analyse.ipynb`
 
-Denne notebooken:
-- laster inn datasett
-- beregner mobilitets- og bygningsindikatorer
+1. Åpne en terminal og naviger til prosjektmappen.
+2. Start JupyterLab.
+3. Åpne og kjør notebooken `analyse.ipynb`.
+
+### Notebookens funksjonalitet
+
+Notebooken utfører følgende operasjoner:
+
+- laster inn og klargjør datasett
+- beregner mobilitets- og bygningsrelaterte indikatorer
 - analyserer tidsprofiler
-- visualiserer indikatorer som barplot
-- genererer et interaktivt Folium-kart
-- sammenligner Ullern og Grünerløkka
+- visualiserer indikatorer ved hjelp av stolpediagrammer
+- genererer et interaktivt kart ved bruk av Folium
+- sammenligner resultater for Ullern og Grünerløkka
 
 
 ---
