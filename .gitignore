@@ -1,7 +1,18 @@
+# --- Python ---
 __pycache__/
+*.py[cod]
+
+# --- Jupyter ---
 .ipynb_checkpoints/
+
+# --- Virtual environments ---
+.env/
+.venv/
+venv/
+
+# --- OS files ---
 .DS_Store
-*.pyc
-.env
-.DS_Store
-.DS_Store
+
+# --- Editor / IDE ---
+.vscode/
+.idea/
