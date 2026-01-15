@@ -1,59 +1,62 @@
+# Urban Mobility and Building Indicators: An analysis of Bike-Sharing Usage and Urban Structure in Ullern and Grünerløkka
 
-# Urbane mobilitets- og bygningsindikatorer: En analyse av bysykkelbruk og arealstruktur i Ullern og Grünerløkka.
+The purpose of this project is to investigate how urban mobility patterns derived from bike-sharing data
+relate to land-use structure and building typologies across different districts in Oslo. 
+Using spatial analysis, mobility indicators, and building data from OpenStreetMap, 
+the project examines how variations in urban form influence bike-sharing usage.
 
-Formålet med denne oppgaven er å undersøke hvordan mobilitetsmønstre fra bysykkel 
-henger sammen med arealstruktur og bygningstyper i ulike bydeler i Oslo. 
-Ved hjelp av romlige analyser, mobilitetsindikatorer og bygningstyper fra 
-OpenStreetMap undersøker jeg hvordan ulik byform påvirker bruk av bysykler.
+The analysis addresses the following research questions:
 
-Analysen prøver å besvare:
+1. How does the level of mobility differ between Ullern and Grünerløkka, and which 
+   indicators most clearly capture these differences?
+2. Can observed variations in mobility be explained by differences in population density,
+   building structure, or land-use mix?
+3. What do the daily usage profiles of bike-sharing look like in the two districts, and which
+   commuting patterns can be identified?
+4. How are these relationships represented in an interactive map that combines 
+   mobility indicators and building typologies?
 
-1. Hvordan varierer mobilitetsnivået mellom Ullern og Grünerløkka, og hvilke 
-   indikatorer viser tydeligst forskjell?
-2. Kan variasjoner i mobilitet forklares gjennom forskjeller i befolkningstetthet, 
-   bygningsstruktur eller funksjonsblanding?
-3. Hvordan ser døgnprofilen for sykkelbruk ut i de to bydelene, og hvilke 
-   pendlermønstre kan identifiseres?
-4. Hvordan reflekteres disse sammenhengene i et interaktivt kart som kombinerer 
-   mobilitetsindikatorer og bygningstyper?
 
-En komplett Jupyter Notebook (`analyse.ipynb`) viser bruken av funksjonene og 
-inneholder all analyse, figurer og tolkning av resultatene. Se også diskusjon av
-resultater lenger ned i README.
+
+A complete Jupyter Notebook (`analyse.ipynb`) demonstrates the use of all implemented functions 
+and contains the full analysis, visualizations, and interpretation of results.
+ A discussion of the findings is provided further down in this README.
+
 
 
 ---
 
-##  Prosjektstruktur
-Prosjektmappen består av følgende filer.
+## Project Structure
+
+The project directory contains the following files:
+
 ```text
 Project/
 ├── data/
-│   ├── oslo_bydeler_befolkning_2024.geojson   # Befolknings- og bydelsdata
-│   └── sykkel_oktober_2025.csv                # Sykkelturdata
+│   ├── oslo_bydeler_befolkning_2024.geojson   # Population and district data
+│   └── sykkel_oktober_2025.csv                # Bike trip data
 │
-├── analyse.ipynb                              # Hovedrapport med analyser og visualiseringer
+├── analyse.ipynb                              # Main analysis and visualizations
 │
-├── data_prosessering.py                       # Spatial join, punktkonvertering, OSM-bygg
-├── helpers.py                                 # CRS-hjelpefunksjon
-├── indikatorer.py                             # Mobilitets- og bygningsindikatorer
-├── lese_data.py                               # Funksjoner for innlasting av data
-├── map.py                                     # Interaktivt Folium-kart
-├── visualisering.py                           # Plotfunksjoner for indikatorer, bygg, tidsprofiler
+├── data_prosessering.py                       # Spatial joins, point conversion, OSM building retrieval
+├── helpers.py                                 # CRS utility functions
+├── indikatorer.py                             # Mobility and building indicators
+├── lese_data.py                               # Data loading functions
+├── map.py                                     # Interactive Folium map
+├── visualisering.py                           # Plotting functions for indicators and time profiles
 │
-└── README.md                                  # Dokumentasjon av prosjektet
+└── README.md                                  # Project documentation
 ```
 
 ---
 
 
-## Installasjon
+## Installation
 
-Prosjektet bruker kun pakker som inngår i conda-miljøet **gmgi221**.
-Alle nødvendige avhengigheter er definert i `gmgi221.yml`.
+The project relies exclusively on packages included in the **gmgi221** conda environment.
+All required dependencies are defined in `gmgi221.yml`.
 
-#### Opprett og aktiver conda-miljøet
-
+#### Create and activate the conda environment
 ```bash
 conda env create -f gmgi221.yml
 conda activate gmgi221
@@ -61,133 +64,137 @@ conda activate gmgi221
 
 ---
 
-## Hvordan kjøre prosjektet
+## Running the Project
 
-1. Åpne en terminal og naviger til prosjektmappen.
+1. Open a terminal and navigate to the project directory.
 2. Start JupyterLab.
-3. Åpne og kjør notebooken `analyse.ipynb`.
+3. Open and run the notebook analyse.ipynb
 
-### Notebookens funksjonalitet
+### Notebook Functionality
 
-Notebooken utfører følgende operasjoner:
+The notebook performs the following tasks:
 
-- laster inn og klargjør datasett
-- beregner mobilitets- og bygningsrelaterte indikatorer
-- analyserer tidsprofiler
-- visualiserer indikatorer ved hjelp av stolpediagrammer
-- genererer et interaktivt kart ved bruk av Folium
-- sammenligner resultater for Ullern og Grünerløkka
+- loads and preprocesses datasets
+- computes mobility- and building-related indicators
+- analyzes temporal usage profiles
+- visualizes indicators using bar charts
+- generates an interactive map using Folium
+- compares results between Ullern and Grünerløkka
 
 
 ---
 
-## Funksjonene
+## Functions
 ### lese_data.py
-- csv_til_df() – Leser sykkelturdata og håndterer datatyper
-- data_til_gdf() – Leser GeoData (ShapeFile, GeoJSON, etc.)
+- csv_til_df() – Reads bike trip data and handles data types
+- data_til_gdf() – Loads geospatial data (Shapefile, GeoJSON, etc.)
 
 ### data_prosessering.py
-- punkter_gdf() – Konverterer lat/lon til punktgeometri
-- legg_til_bydeler() – Romlig join mellom punkt og bydelsgeometri
-- hent_bygninger() – Henter bygninger fra OSM og klipper dem til bydelene
+- punkter_gdf() – Converts latitude/longtitude coordinates to point geometries
+- legg_til_bydeler() – Performs spatial join between points and district polygons
+- hent_bygninger() – Retrieves building data from OSM and clips it to district boundaries
 
 ### indikatorer.py
-- mobilitetsindikatorer() – Beregner turer inn/ut, per km², per innbygger
-- bygningsindikatorer() – Beregner antall bygninger, bygningsareal, tetthet
+- mobilitetsindikatorer() – Computes inbound/outbound trips, per km² and per capita
+- bygningsindikatorer() – Computes building counts, building area and density
 
 ### visualisering.py
-- plot_mobilitetsindikatorer() – Barplot av mobilitetsindikatorer
-- plot_tidsprofil() – Døgnprofil for startede turer
-- plot_tidsprofil_retniger() – Turer mellom to bydeler over døgnet
-- plot_bygningsindikatorer() – Sammenligning av bygningsindikatorer
-- plot_bygningstyper() – Prosentvis fordeling av bygningstyper
+- plot_mobilitetsindikatorer() – Bar plots of mobility indicators
+- plot_tidsprofil() – Daily profile of trip start times
+- plot_tidsprofil_retniger() – Trips between two districts over the course of the day
+- plot_bygningsindikatorer() – Comparison of building indicators
+- plot_bygningstyper() – Percentage distribution of building types
 
 ### map.py
-- interaktivt_kart() - Choropleth + bygningstyper i Folium
+- interaktivt_kart() - Choropleth map combined with building typologies using Folium
 
 
 ---
 
-## Datasett
-Jeg har brukt følgende datasett i analysen:
-- **Bysykkelturer (Oslo Bysykkel / UIP)**  
-  Turdata fra oktober 2025 som inneholder start- og sluttposisjon (koordinater), tidsstempel 
-  og stasjonsinformasjon. Brukes til å beregne mobilitetsindikatorer.
-  link: https://oslobysykkel.no/apne-data/historisk
+## Datasets
 
-- **Bygninger (OpenStreetMap via OSMnx)**  
-  Bygninger innenfor de to utvalgte bydelene hentet fra OSM. Inneholder bygningstyper
-  og footprint-geometri, og brukes til bygningsindikatorer og kartlag.
+The following datasets are used in the analysis:
+- **Bike-Sharing Trips (Oslo Bysykkel / UIP)**
+   Trip data from October 2025, including start and end coordinates, timestamps, and station information. Used to compute mobility indicators.
+   Link: https://oslobysykkel.no/apne-data/historisk
 
-- **Befolkningstall/bydeler (SSB / Oslo kommune)**  
-  Befolkningstall per bydel fra 2024, brukt til indikatorer per innbygger, kart, og for å knytte 
-  start- og sluttpunkt for sykkelturer og bygninger til bydeler. 
-  link: https://kart.ssb.no/wayfinder/default?x=23.514300&y=67.351581&z=3.6
+- **Buildings (OpenStreetMap via OSMnx)**
+   Building footprints and building types within the two selected districts. Used for building indicators and map layers.
 
-Alle datasett reprojiseres til **EPSG:25833 (UTM 33N)** for korrekte arealberegninger.
+- **Population and District Boundaries (SSB / Oslo Municipality)
+   Population counts per district (2024), used for per-capita indicators, mapping, and associating trip start/end points and building with districts.
+   link: https://kart.ssb.no/wayfinder/default?x=23.514300&y=67.351581&z=3.6
+
+All datasets are reprojected to **EPSG:25833 (UTM 33N)** to ensure accurate area calculations.
 
 
 ---
 
-## Metode
-Analysen bygger på en kombinasjon av dataprosessering, indikatorberegning og visualisering, 
-og består av følgende steg:
+## Methology
+The analysis combines data preprocessing, indicator computation, visualization, and consist of the following steps:
 
-1. **Dataprosessering**  
-   - Lese inn CSV og GeoJSON/GPKG-data  
-   - Reprojisere til felles koordinatsystem  
-   - Konvertere sykkelturpunkter til geometri  
-   - Knytte punktdata til bydeler via spatial join
+1. **Data Preprocessing**
+   - Load CSV and GeoJSON/GPKG-data
+   - Reproject data to a common coordinate referance system
+   - Convert bike trip coordinates to point geometries
+   - Assign points to districts using spatial joins
 
-2. **Mobilitetsindikatorer**  
-   - Turer startet og sluttet per bydel  
-   - Netto turer (inn – ut)  
-   - Mobilitet per km^2 og per innbygger  
-   - Døgnprofil for startede turer  
+2. **Mobility Indicators**
+   - Trips started and ended per district 
+   - Net trips 
+   - Mobility per km² and per capita
+   - Daily profiles of trip starts
 
-3. **Bygningsindikatorer**  
-   - Antall bygninger  
-   - Bygningsareal   
-   - Bygningstetthet per km²  
-   - Fordeling av bygningstyper
+3. **Building Indicators**
+   - Number of buildings
+   - Total buildings area
+   - Building density per km²
+   - Distribution of building types
 
-4. **Visualiseringer**  
-   - Barplot av indikatorer  
-   - Døgnprofil for mobilitet  
-   - Bygningstyper per bydel
-   - Et interaktivt Folium-kart som kombinerer choropleth + bygningstyper
-
-
----
-
-## Diskusjon av resultater
-
-Analysen viser tydelige forskjeller mellom Ullern og Grünerløkka:
-
-- Grünerløkka har betydelig høyere sykkelaktivitet, både totalt, per km² og per innbygger.  
-- Døgnprofilen viser jevn aktivitet hele dagen i Grünerløkka, mens 
-  Ullern har et tydligere pendlerpreg.
-- Bygningstetthet og typefordeling forklarer mye av variasjonen.
-- Kartet viser at mobilitet og arealbruk følger samme geografiske mønstre.
-
-Samlet viser resultatene en sammenheng mellom urban tetthet, funksjonsblanding og mobilitet.
+4. **Visualization**
+   - Bar charts of indicators
+   - Daily mobility profiles
+   - Building type distributions by district
+   - An interactive Folium map combining choropleth layers and building data
 
 
 ---
 
-## Refleksjoner rundt dataene
-- OpenStreetMap-data er crowdsourcet og bygningstyper kan være mangelfulle 
-  eller ufullstendige.
-- Sykkelturene dekker kun én måned, og er derfor sesongpreget.
-- Spatial join kan gi feil hvis pukter ligger nær bydelsgrenser.
-- Indikatorer sier ikke alt om infrastruktur, sosial eller økonomisk
-  påvirkning.
+## Discussion of Results
 
-Til tross for disse begrensningene viser analysen robuste mønstre som samsvarer 
-med forventet bystruktur og mobilitetsmønstre i Oslo.
+The analysis reveals clear differences between Ullern and Grünerløkka:
+
+- Grünerløkka exhibits significantly higher bike-sharing activity, both in total, per km², and per capita.
+- The daily usage profile in Grünerløkka shows consisten activity throughout the day, while Ullern displays more pronunced commuting patterns.
+- Building density and building type distribution explain a substantial portion of the observed variation. 
+- The interactive map illustrates that mobility patterns closely allign with land-use and urban structure. 
+
+Overall, the results indicate a strong relationship between urban density, land-use mix, and mobility behavior.
+
 
 ---
 
-## Forfatter
-Prosjektet er levert av:
+## Data limitations and Reflections
+
+- OpenStreetMap data is crowdsourced, and building type classifications may be incomplete or inaccurate. 
+- The bike-sharing data covers only a single month and i therefore subject to seasonal effects. 
+- Spatial joins may introduce errors when points lie close to district boundaries. 
+- The selected indicators do not capture infrastructure quality or socioeconomic factors. 
+
+Despite these limitations, the analysis reveals robust patterns consistent with expecter urban structure and mobility dynamics in Oslo. 
+
+
+---
+
+## Author 
+Project submitted by:
 Simen Roko Krogstie
+
+
+---
+
+## Academic Context
+
+This project was completed as part of the course **GMGI221** at **NMBU** (autumn 2025).  
+Final grades: Project — **B**, Course — **A**.
+
