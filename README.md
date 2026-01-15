@@ -46,23 +46,11 @@ Project/
 
 ---
 
-## Installasjon
+
 ## Installasjon
 
 Prosjektet bruker kun pakker som inngår i conda-miljøet **gmgi221**.
 Alle nødvendige avhengigheter er definert i `gmgi221.yml`.
-
-### Påkrevde biblioteker
-Følgende Python-biblioteker brukes i prosjektet:
-
-- geopandas
-- shapely
-- pyproj
-- osmnx
-- folium
-- matplotlib
-- pandas
-- numpy
 
 ### Opprett og aktiver conda-miljøet
 
