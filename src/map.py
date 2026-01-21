@@ -3,95 +3,93 @@ import folium
 from helpers import CRS
 
 
-def interaktivt_kart(
-        mobilitet_gdf: gpd.GeoDataFrame,
-        bygninger_gdf: gpd.GeoDataFrame,
-        bydel_a: str,
-        bydel_b: str,
-        choropleth_col: str = "totalt_turer_per_km2",
+def interactive_map(
+        mobility_gdf: gpd.GeoDataFrame,
+        buildings_gdf: gpd.GeoDataFrame,
+        district_a: str,
+        district_b: str,
+        choropleth_col: str = "total_trips_per_km2",
         name_col: str = "bydel",
         popup_cols: list[str] | None = None,
-        bygg_type_col: str = "building",
-        bygg_bydel_col: str = "bydel",
+        building_type_col: str = "building",
+        building_district_col: str = "bydel",
 ) -> folium.Map:
     """
-    Lager et interaktivt Folium-kart med mobilitetsindikatorer og bygninger
-    for to utvalgte bydeler.
+    Makes an interactive Folium map with mobility indicators and buildings
+    for two selected districts.
 
-    Kartet inneholder:
-    - Et choropleth-lag for de to bydelene, fargelagt etter en valgt
-      mobilitetsindikator.
-    - Popup med valgte kolonner (f.eks. bydelnavn og indikatorverdi).
-    - Et bygninglag fargekodet etter bygningstype, filtrert til de samme
-      bydelene.
+    The map contains:
+    - A choropleth layer for the two districts, colored by a selected
+      mobility indicator.
+    - Popup with selected columns (e.g., district name and indicator value).
+    - A building layer colored by building type, filtered to the same
+      districts.    
 
     Parameters
     ----------
-    mobilitet_gdf : gpd.GeoDataFrame
-        GeoDataFrame med mobilitetsindikatorer.
-    bygninger_gdf : gpd.GeoDataFrame
-        GeoDataFrame med bygninger.
-    bydel_a : str
-        Navn på første bydel som skal vises.
-    bydel_b : str
-        Navn på andre bydel som skal vises.
+    mobility_gdf : gpd.GeoDataFrame
+        GeoDataFrame with mobility indicators.
+    buildings_gdf : gpd.GeoDataFrame
+        GeoDataFrame with buildings.
+    district_a : str
+        Name of the first district to be displayed.
+    district_b : str
+        Name of the second district to be displayed.
     choropleth_col : str, optional
-        Navnet på kolonnen i "mobilitet_gdf" som brukes til å fargelegge
-        bydeler. 
-        Default er "totalt_turer_per_km2".
+        Name of the column in "mobility_gdf" used to color the districts.
+        Default is "total_trips_per_km2".
     name_col : str, optional
-        Kolonnenavn i "mobilitet_gdf" som inneholder bydelsnavn.
-        Default er "bydel".
+        Name of the column in "mobility_gdf" containing district names.
+        Default is "bydel".
     popup_cols : list of str or None, optional
-        Liste over kolonnenavn som skal vises i popup.
-        Hvis "None" brukes "[name_col, choropleth_col]".
-    bygg_type_col : str, optional
-        Kolonnenavn for bygningstype i "bygninger_gdf".
-        Default er "building".
-    bygg_bydel_col : str, optional
-        Kolonnenavn for bydel i "bygninger_gdf". Brukes til å filtrere
-        bygninger til bydelene gitt av "bydel_a" og "bydel_b".
-        Default er "bydel".
-
+        List of column names to be displayed in the popup.
+        If "None", [name_col, choropleth_col]" is used.
+    building_type_col : str, optional
+        Name of the column in "buildings_gdf" containing building types.
+        Default is "building".
+    building_district_col : str, optional
+        Name of the column in "buildings_gdf" containing district names.
+        Used to filter buildings to the districts specified by "district_a" and "district_b".
+        Default is "bydel".
+    
     Returns
     -------
     m : folium.Map
-        Et Folium-kart-objekt med lag for mobilitetsindikatorer og bygninger.
+        A Folium map object with layers for mobility indicators and buildings.
 
     Raises
     ------
     KeyError
-        Hvis nødvendige kolonner mangler i "mobilitet_gdf" eller
-        "bygninger_gdf", eller hvis en av de oppgitte bydelene ikke finnes.
-   	ValueError
-        Hvis det ikke finnes bygninger i de valgte bydelene.
+        If necessary columns are missing in "mobility_gdf" or
+        "buildings_gdf", or if one of the specified districts does not exist.
+    ValueError
+        If there are no buildings in the selected districts.
     """
 
-    # Sikrer gyldig CRS
-    gdf = CRS(mobilitet_gdf, target_crs="EPSG:4326", name="mobilitet_gdf", wgs84_mangler=True)
+    # Ensures valid CRS
+    gdf = CRS(mobility_gdf, target_crs="EPSG:4326", name="mobility_gdf", wgs84_missing=True)
 
-    # Resetter indeks hvis nødvendig
+    # Resets index if needed
     if name_col not in gdf.columns and gdf.index.name == name_col:
         gdf = gdf.reset_index()
 
-    # Sjekker at nødvendige kolonner finnes i mobilitet_gdf
+    # Checks that necessary columns exist in mobility_gdf
     if name_col not in gdf.columns:
-        raise KeyError(f"Kolonnen {name_col!r} finnes ikke i mobilitet_gdf.")
+        raise KeyError(f"Column {name_col!r} does not exist in mobility_gdf.")
     if choropleth_col not in gdf.columns:
-        raise KeyError(f"Kolonnen {choropleth_col!r} finnes ikke i mobilitet_gdf.")
+        raise KeyError(f"Column {choropleth_col!r} does not exist in mobility_gdf.")
 
-    fokus = [bydel_a, bydel_b]
-
-    # Sjekker at begge bydeler finnes i mobilitet_gdf
-    for b in fokus:
+    # Checks that both districts exist in mobility_gdf
+    focus = [district_a, district_b]
+    for b in focus:
         if b not in gdf[name_col].values:
-            raise KeyError(f"Bydelen {b!r} finnes ikke i mobilitet_gdf[{name_col!r}].")
-
+            raise KeyError(f"District {b!r} does not exist in mobility_gdf[{name_col!r}].")
+        
     # Default popup
     if popup_cols is None:
         popup_cols = [name_col, choropleth_col]
 
-    # Oppretter kartet
+    # Creates the map
     center = gdf.geometry.union_all().centroid
     m = folium.Map(
         location=[center.y, center.x],
@@ -105,14 +103,14 @@ def interaktivt_kart(
         )
     )
 
-    # Filtrerer til fokusbydeler
-    fokus_mask = gdf[name_col].isin(fokus)
-    gdf_fokus = gdf.loc[fokus_mask].copy()
+    # Filter to focus districts
+    focus_mask = gdf[name_col].isin(focus)
+    gdf_focus = gdf.loc[focus_mask].copy()
 
-    # Choropleth-lag for fokusbydeler
+    # Choropleth-lag for focus districts
     folium.Choropleth(
-        geo_data=gdf_fokus,
-        data=gdf_fokus,
+        geo_data=gdf_focus,
+        data=gdf_focus,
         columns=[name_col, choropleth_col],
         key_on=f"feature.properties.{name_col}",
         fill_color="YlGnBu",
@@ -122,9 +120,9 @@ def interaktivt_kart(
         name=f"{choropleth_col.replace('_', ' ')} (bydeler)",
     ).add_to(m)
 
-    # GeoJson-lag for popups
+    # GeoJson-layer for popups
     folium.GeoJson(
-        gdf_fokus,
+        gdf_focus,
         style_function=lambda f: {
             "color": "black",
             "weight": 1,
@@ -140,24 +138,25 @@ def interaktivt_kart(
         control=False,
     ).add_to(m)
 
-    # Sikrer gyldig CRS
-    bygg = CRS(bygninger_gdf, target_crs="EPSG:4326", name="bygninger_gdf", wgs84_mangler=True,)
+    # Ensures valid CRS
+    building = CRS(buildings_gdf, target_crs="EPSG:4326", name="buildings_gdf", wgs84_maissing=True,)
 
-    # Sjekker at nødvendige kolonner finnes i bygninger_gdf
-    if bygg_bydel_col not in bygg.columns:
-        raise KeyError(f"Kolonnen {bygg_bydel_col!r} finnes ikke i bygninger_gdf.")
-    if bygg_type_col not in bygg.columns:
-        raise KeyError(f"Kolonnen {bygg_type_col!r} finnes ikke i bygninger_gdf.")
+    # Checks that specified districts exist in buildings_gdf
+    if building_district_col not in building.columns:
+        raise KeyError(f"Column {building_district_col!r} does not exist in buildings_gdf.")
+    if building_type_col not in building.columns:
+        raise KeyError(f"Column {building_type_col!r} does not exist in buildings_gdf.")
 
-    # Filtrer bygninger til de valgte bydelene
-    bygg = bygg[bygg[bygg_bydel_col].isin(fokus)].copy()
+    # Filters buildings to the selected districts
+    building = building[building[building_district_col].isin(focus)].copy()
 
-    if len(bygg) == 0:
-        raise ValueError("Ingen bygninger finnes i de valgte bydelene.")
+    if len(building) == 0:
+        raise ValueError("There are no buildings in the selected districts.")
 
     # Håndterer manglende bygningstype
-    bygg[bygg_type_col] = bygg[bygg_type_col].fillna("ukjent")
-    typer = sorted(bygg[bygg_type_col].unique())
+    # Handles missing building type
+    building[building_type_col] = building[building_type_col].fillna("unknown")
+    building_types = sorted(building[building_type_col].unique())
 
     # Fargemapping
     base_colors = [
@@ -167,15 +166,15 @@ def interaktivt_kart(
     ]
     type_to_color = {
         t: base_colors[i % len(base_colors)]
-        for i, t in enumerate(typer)
+        for i, t in enumerate(building_types)
     }
 
-    # Leger eget lag for bygningstyper
-    fg_bygg = folium.FeatureGroup(name="Bygningstyper", show=False)
+    # Separate layer for building types
+    fg_building = folium.FeatureGroup(name="Building types", show=False)
 
-    # Legger til hver bygning 
-    for _, row in bygg.iterrows():
-        btype = row[bygg_type_col]
+    # Adding each building
+    for _, row in building.iterrows():
+        btype = row[building_type_col]
         geom = row.geometry.__geo_interface__
         farge = type_to_color.get(btype, "#999999")
 
@@ -187,10 +186,10 @@ def interaktivt_kart(
                 "weight": 0.3,
                 "fillOpacity": 0.6,
             },
-            tooltip=folium.Tooltip(f"<b>Bygningstype:</b> {btype}"),
-        ).add_to(fg_bygg)
+            tooltip=folium.Tooltip(f"<b>Building type:</b> {btype}"),
+        ).add_to(fg_building)
 
-    fg_bygg.add_to(m)
+    fg_building.add_to(m)
 
     
     folium.LayerControl(collapsed=False).add_to(m)
