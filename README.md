@@ -43,7 +43,7 @@ Project/
 ├── indicators.py                              # Mobility and building indicators
 ├── data_reading.py                            # Data loading functions
 ├── map.py                                     # Interactive Folium map
-├── visulization.py                           # Plotting functions for indicators and time profiles
+├── visulization.py                            # Plotting functions for indicators and time profiles
 │
 └── README.md                                  # Project documentation
 ```
