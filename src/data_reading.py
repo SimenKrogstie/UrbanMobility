@@ -103,6 +103,6 @@ def data_to_gdf(
         raise IOError(f"Could not read the file '{path}': {e}")
     
     # Handles CRS with the helper function CRS()
-    gdf = CRS(gdf, target_crs, name="data_to_gdf", wgs84_mangler=True)
+    gdf = CRS(gdf, target_crs, name="data_to_gdf", wgs84_missing=True)
     
     return gdf
