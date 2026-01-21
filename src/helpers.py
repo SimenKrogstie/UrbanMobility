@@ -6,87 +6,86 @@ def CRS(
         target_crs: str,
         *,
         name: str = "gdf",
-        wgs84_mangler: bool = False,
+        wgs84_missing: bool = False,
 ) -> gpd.GeoDataFrame:
     """
-    Standardiserer og sikrer koordinatsystem (CRS) for en GeoDataFrame.
+    Standardizes and ensures coordinate reference system (CRS) for a GeoDataFrame.
 
-    Funksjonen gjør tre hovedting:
-    1. sjekker at det finnes en "geometry"-kolonne.
-    2. Sikrer at "gdf.crs" er satt (eller setter den til EPSG:4326 hvis
-        "wgs84_mangler=True").
-    3. Reprojiserer til "target_crs" dersom nødvendig.
+    The function:
+    1. checks that a "geometry" column exists.
+    2. Ensures "gdf.crs" is set (or sets it to EPSG:4326 if "wgs84_missing=True").
+    3. Reprojects to "target_crs" if necessary.
 
-    Dersom "gdf" allerede har samme CRS som "target_crs" returneres en kopi
-    uendret. Eller reprojiseres geometrien til "target_crs".
+    If "gdf" already has the same CRS as "target_crs", a copy is returned
+    unchanged. Otherwise, the geometry is reprojected to "target_crs".
 
     Parameters
     ----------
     gdf : gdp.GeoDataFrame
-        GeoDataFrame som skal kontrolleres og eventuelt reprojiseres.
+        GeoDataFrame to be checked and potentially reprojected.
     target_crs : str
-        Mål-CRS på formen "EPSG:XXXX" som GeoDataFrame skal ha.
+        Target CRS in the form "EPSG:XXXX" that the GeoDataFrame should have.
     name : str, optional
-        Navn brukt i feilmeldinger for å gjøre feilsøkinger enklere.
-        Default er "gdf".
-    wgs84_mangler : bool, optional
-        Hvis "True" og "gdf.crs" mangler, antas at dataene er i WGS84
-        (EPSG:4326) og dette CRS settes før eventuell reprojeksjon.
-        Hvis "False" og "gdf.crs" mangler, ValueError.
-        Default er "False".
+        Name used in error messages to make debugging easier.
+        Default is "gdf".
+    wgs84_missing : bool, optional
+        If "True" and "gdf.crs" is missing, it is assumed that the data is in WGS84
+        (EPSG:4326) and this CRS is set before any reprojecting.
+        If "False" and "gdf.crs" is missing, ValueError is raised.
+        Default is "False".
 
     Returns
     -------
-    gdf : gpd.GeoDataFram"
-        En kopi av "gdf" der CRS er lik "target_crs".
+    gdf : gpd.GeoDataFrame
+        A copy of "gdf" where the CRS is equal to "target_crs".
 
     Raises
     ------
-    ValueError hvis:
-        - "geometry"-kolonnen mangler.
-        - CRS mangler og "wgs84_mangler=False".
-        - "target_crs" ikke er en streng på formen "EPSG:XXXX".
-        - reprojeksjon feiler.
+    ValueError:
+        - "geometry"-column is missing.
+        - CRS is missing and "wgs84_missing=False".
+        - "target_crs" is not a string in the form "EPSG:XXXX".
+        - reprojection fails.
     """
     
     gdf = gdf.copy()
 
-    # Sjekker at geometri-kolonnen finnes i gdf
+    # Checks that the geometry column exists in gdf
     if "geometry" not in gdf.columns:
-        raise ValueError(f"{name} mangler 'geometry'-kolonne.")
+        raise ValueError(f"{name} is missing 'geometry'-column.")
     
-    # Sjekker at target_crs er formatert som en streng
+    # Checks that target_crs is formatted as a string
     if not isinstance(target_crs, str) or not target_crs.strip().upper().startswith("EPSG:"):
         raise ValueError(
-            f"{name}: target_crs må være en streng, e.g. 'EPSG:XXXX'. "  
-            f"Fikk {target_crs!r} ({type(target_crs).__name__})."
+            f"{name}: target_crs must be a string, e.g. 'EPSG:XXXX'. "  
+            f"Got {target_crs!r} ({type(target_crs).__name__})."
         )
-    
-    # Normaliserer target_crs til store bokstaver og uten mellomrom
+
+    # Normalizes target_crs to uppercase and without spaces
     target_crs = target_crs.strip().upper()
 
-    # Sjekker at CRS er satt
+    # Checks that CRS is set
     if gdf.crs is None:
-        if wgs84_mangler:
+        if wgs84_missing:
             gdf = gdf.set_crs("EPSG:4326")
         else:
             raise ValueError(
-                f"{name} mangler CRS. Sett CRS før du kaller CRS(), "
-                f"eller bruk wgs84_mangler=True."
+                f"{name} is missing CRS. Set CRS before calling CRS(), "
+                f"or use wgs84_missing=True."
             )
-    
-    # Gjør nåværende CRS til streng for å sammenligen
+
+    # Makes current CRS a string for comparison
     current = str(gdf.crs).upper()
 
-    # Hvis CRS allerede er riktig returneres en kopi uten reprojeksjon
+    # If CRS is already correct, return a copy without reprojection
     if current == target_crs:
         return gdf
-    
-    # Reprojiserer til 'target_crs'
+
+    # Reprojects to 'target_crs'
     try:
         return gdf.to_crs(target_crs)
     except Exception as e:
-        # Pakker underliggende feil i en mer lesbar ValueError
+        # Packages underlying error in a more readable ValueError
         raise ValueError(
-            f"{name}: kunne ikke transformere fra {current} til {target_crs}: {e}"
+            f"{name}: could not transform from {current} to {target_crs}: {e}"
         )
