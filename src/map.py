@@ -1,6 +1,6 @@
 import geopandas as gpd
 import folium
-from helpers import CRS
+from src.helpers import CRS
 
 
 def interactive_map(

@@ -1,6 +1,6 @@
 import geopandas as gpd
 import pandas as pd
-from helpers import CRS
+from src.helpers import CRS
 
 
 def mobilityindicators(
@@ -87,20 +87,20 @@ def mobilityindicators(
     )
 
     # Computes net and total number of trips
-    mobility["netto_trips"] = mobility["trips_ended"] - mobility["trips_started"]
-    mobility["trips_total"] = mobility["trips_started"] + mobility["trips_ended"]
+    mobility["net_trips"] = mobility["trips_ended"] - mobility["trips_started"]
+    mobility["total_trips"] = mobility["trips_started"] + mobility["trips_ended"]
 
     # Computes area-based indicators
     mobility["trips_started_per_km2"] =  mobility["trips_started"] / mobility["area_km2"]
     mobility["trips_ended_per_km2"] = mobility["trips_ended"] / mobility["area_km2"]
-    mobility["netto_trips_per_km2"] = mobility["netto_trips"] / mobility["area_km2"]
-    mobility["trips_total_per_km2"] = mobility["trips_total"] / mobility["area_km2"]
+    mobility["net_trips_per_km2"] = mobility["net_trips"] / mobility["area_km2"]
+    mobility["total_trips_per_km2"] = mobility["total_trips"] / mobility["area_km2"]
 
     # Computes population-based indicators
     mobility["trips_started_per_capita"] = mobility["trips_started"] / mobility[population_col]
     mobility["trips_ended_per_capita"] = mobility["trips_ended"] / mobility[population_col]
-    mobility["netto_trips_per_capita"] = mobility["netto_trips"] / mobility[population_col]
-    mobility["trips_total_per_capita"] = mobility["trips_total"] / mobility[population_col]
+    mobility["net_trips_per_capita"] = mobility["net_trips"] / mobility[population_col]
+    mobility["total_trips_per_capita"] = mobility["total_trips"] / mobility[population_col]
 
     return mobility
 
@@ -187,12 +187,10 @@ def buildingindicators(
     districts["area_m2"] = districts.geometry.area
     districts["area_km2"] = districts.geometry.area / 1000000
 
-    # Beregner bygningsindikatorer
     # Computes building indicators
     districts["buildings_per_km2"] = districts["num_buildings"] / districts["area_km2"]
     districts["built_up_area_percent"] = (districts["building_area_m2"] / districts["area_m2"]) * 100
-
-    # Beregner gjennomsnittlig bygningsstørrelse
+    
     # Computes average building size
     mask = districts["num_buildings"] > 0
     districts["avg_building_area_m2"] = 0.0
