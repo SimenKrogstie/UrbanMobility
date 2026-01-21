@@ -117,7 +117,7 @@ def interactive_map(
         fill_opacity=0.9,
         line_opacity=0.3,
         highlight=False,
-        name=f"{choropleth_col.replace('_', ' ')} (bydeler)",
+        name=f"{choropleth_col.replace('_', ' ')} (districts)",
     ).add_to(m)
 
     # GeoJson-layer for popups
@@ -139,7 +139,7 @@ def interactive_map(
     ).add_to(m)
 
     # Ensures valid CRS
-    building = CRS(buildings_gdf, target_crs="EPSG:4326", name="buildings_gdf", wgs84_maissing=True,)
+    building = CRS(buildings_gdf, target_crs="EPSG:4326", name="buildings_gdf", wgs84_missing=True,)
 
     # Checks that specified districts exist in buildings_gdf
     if building_district_col not in building.columns:
