@@ -171,8 +171,8 @@ def buildingindicators(
     agg = (
         buildings.groupby(district_col)
         .agg(
-            antall_bygninger=("geometry", "size"),
-            bygning_areal_m2=("area_m2", "sum")
+            num_buildings=("geometry", "size"),
+            building_area_m2=("area_m2", "sum")
         )
         .reset_index()
     )
@@ -197,6 +197,6 @@ def buildingindicators(
     districts.loc[mask, "avg_building_area_m2"] = districts.loc[mask, "building_area_m2"] / districts.loc[mask, "num_buildings"]
 
     # Sets district as index
-    buildingsindicators_gdf = districts.set_index(district_col)
+    buildingindicators_gdf = districts.set_index(district_col)
 
-    return buildingsindicators_gdf
+    return buildingindicators_gdf

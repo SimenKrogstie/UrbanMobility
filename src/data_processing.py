@@ -214,7 +214,7 @@ def fetch_buildings(
     ].copy()
 
     # Reprojects buildings to target_crs
-    buildings = CRS(buildings, target_crs, name="buildings", wgs84_mangler=True)
+    buildings = CRS(buildings, target_crs, name="buildings", wgs84_missing=True)
 
     # Filter columns needed for spatial join
     district_join = districts_gdf[[district_col, "geometry"]]
