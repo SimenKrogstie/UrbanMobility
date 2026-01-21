@@ -86,27 +86,27 @@ The notebook performs the following tasks:
 
 ## Functions
 ### data_reading.py
-- csv_til_df() – Reads bike trip data and handles data types
-- data_til_gdf() – Loads geospatial data (Shapefile, GeoJSON, etc.)
+- csv_to_df() – Reads bike trip data and handles data types
+- data_to_gdf() – Loads geospatial data (Shapefile, GeoJSON, etc.)
 
 ### data_processing.py
 - points_gdf() – Converts latitude/longtitude coordinates to point geometries
-- add_districts() – Performs spatial join between points and district polygons
+- add_district() – Performs spatial join between points and district polygons
 - fetch_buildings() – Retrieves building data from OSM and clips it to district boundaries
 
 ### indicators.py
-- mobilitetsindikatorer() – Computes inbound/outbound trips, per km² and per capita
-- bygningsindikatorer() – Computes building counts, building area and density
+- mobilityindicators() – Computes inbound/outbound trips, per km² and per capita
+- buildingindicators() – Computes building counts, building area and density
 
 ### visualization.py
-- plot_mobilitetsindikatorer() – Bar plots of mobility indicators
-- plot_tidsprofil() – Daily profile of trip start times
-- plot_tidsprofil_retniger() – Trips between two districts over the course of the day
-- plot_bygningsindikatorer() – Comparison of building indicators
-- plot_bygningstyper() – Percentage distribution of building types
+- plot_mobility_indicators() – Bar plots of mobility indicators
+- plot_timeprofile() – Daily profile of trip start times
+- plot_timeprofile_directions() – Trips between two districts over the course of the day
+- plot_building_indicators() – Comparison of building indicators
+- plot_buildingtypes() – Percentage distribution of building types
 
 ### map.py
-- interaktivt_kart() - Choropleth map combined with building typologies using Folium
+- interactive_map() - Choropleth map combined with building typologies using Folium
 
 
 ---
