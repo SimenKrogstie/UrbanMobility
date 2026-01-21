@@ -18,7 +18,7 @@ The analysis addresses the following research questions:
 
 
 
-A complete Jupyter Notebook (`analyse.ipynb`) demonstrates the use of all implemented functions 
+A complete Jupyter Notebook (`analysis.ipynb`) demonstrates the use of all implemented functions 
 and contains the full analysis, visualizations, and interpretation of results.
  A discussion of the findings is provided further down in this README.
 
@@ -36,14 +36,14 @@ Project/
 │   ├── oslo_bydeler_befolkning_2024.geojson   # Population and district data
 │   └── sykkel_oktober_2025.csv                # Bike trip data
 │
-├── analyse.ipynb                              # Main analysis and visualizations
+├── analysis.ipynb                             # Main analysis and visualizations
 │
-├── data_prosessering.py                       # Spatial joins, point conversion, OSM building retrieval
+├── data_processing.py                         # Spatial joins, point conversion, OSM building retrieval
 ├── helpers.py                                 # CRS utility functions
-├── indikatorer.py                             # Mobility and building indicators
-├── lese_data.py                               # Data loading functions
+├── indicators.py                              # Mobility and building indicators
+├── data_reading.py                            # Data loading functions
 ├── map.py                                     # Interactive Folium map
-├── visualisering.py                           # Plotting functions for indicators and time profiles
+├── visulization.py                           # Plotting functions for indicators and time profiles
 │
 └── README.md                                  # Project documentation
 ```
@@ -85,20 +85,20 @@ The notebook performs the following tasks:
 ---
 
 ## Functions
-### lese_data.py
+### data_reading.py
 - csv_til_df() – Reads bike trip data and handles data types
 - data_til_gdf() – Loads geospatial data (Shapefile, GeoJSON, etc.)
 
-### data_prosessering.py
-- punkter_gdf() – Converts latitude/longtitude coordinates to point geometries
-- legg_til_bydeler() – Performs spatial join between points and district polygons
-- hent_bygninger() – Retrieves building data from OSM and clips it to district boundaries
+### data_processing.py
+- points_gdf() – Converts latitude/longtitude coordinates to point geometries
+- add_districts() – Performs spatial join between points and district polygons
+- fetch_buildings() – Retrieves building data from OSM and clips it to district boundaries
 
-### indikatorer.py
+### indicators.py
 - mobilitetsindikatorer() – Computes inbound/outbound trips, per km² and per capita
 - bygningsindikatorer() – Computes building counts, building area and density
 
-### visualisering.py
+### visualization.py
 - plot_mobilitetsindikatorer() – Bar plots of mobility indicators
 - plot_tidsprofil() – Daily profile of trip start times
 - plot_tidsprofil_retniger() – Trips between two districts over the course of the day
