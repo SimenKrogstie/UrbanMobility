@@ -29,14 +29,14 @@ and contains the full analysis, visualizations, and interpretation of results.
 ## Project Structure
 
 The project directory contains the following files:
-
-```text
+``text
 Project/
 ├── data/
 │   ├── oslo_bydeler_befolkning_2024.geojson   # Population and district data
 │   └── sykkel_oktober_2025.csv                # Bike trip data
 │
 ├── src/
+│   ├── __init__.py                            
 │   ├── data_processing.py                     # Spatial joins, point conversion, OSM building retrieval
 │   ├── helpers.py                             # CRS utility functions
 │   ├── indicators.py                          # Mobility and building indicators
