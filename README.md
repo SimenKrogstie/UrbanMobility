@@ -36,15 +36,15 @@ Project/
 │   ├── oslo_bydeler_befolkning_2024.geojson   # Population and district data
 │   └── sykkel_oktober_2025.csv                # Bike trip data
 │
+├── src/
+│   ├── data_processing.py                     # Spatial joins, point conversion, OSM building retrieval
+│   ├── helpers.py                             # CRS utility functions
+│   ├── indicators.py                          # Mobility and building indicators
+│   ├── data_reading.py                        # Data loading functions
+│   ├── map.py                                 # Interactive Folium map
+│   └── visualization.py                       # Plotting functions for indicators and time profiles
+│
 ├── analysis.ipynb                             # Main analysis and visualizations
-│
-├── data_processing.py                         # Spatial joins, point conversion, OSM building retrieval
-├── helpers.py                                 # CRS utility functions
-├── indicators.py                              # Mobility and building indicators
-├── data_reading.py                            # Data loading functions
-├── map.py                                     # Interactive Folium map
-├── visulization.py                            # Plotting functions for indicators and time profiles
-│
 └── README.md                                  # Project documentation
 ```
 
