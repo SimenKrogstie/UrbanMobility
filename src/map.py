@@ -1,6 +1,6 @@
 import geopandas as gpd
 import folium
-from src.helpers import CRS
+from .urbanmobility.crs import CRS
 
 
 def interactive_map(

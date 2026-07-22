@@ -1,7 +1,7 @@
 import geopandas as gpd
 import pandas as pd
 import pathlib
-from src.helpers import CRS
+from .urbanmobility.crs import CRS
 
 
 def csv_to_df(

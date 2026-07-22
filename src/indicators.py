@@ -1,9 +1,9 @@
 import geopandas as gpd
 import pandas as pd
-from src.helpers import CRS
+from .urbanmobility.crs import CRS
 
 
-def mobilityindicators(
+def mobility_indicators(
         districts_gdf: gpd.GeoDataFrame,
         trips_df: pd.DataFrame,
         population_col: str = "befolkning_2024",
@@ -105,7 +105,7 @@ def mobilityindicators(
     return mobility
 
 
-def buildingindicators(
+def building_indicators(
         buildings_gdf: gpd.GeoDataFrame,
         districts_gdf: gpd.GeoDataFrame,
         district_col: str = "bydel"

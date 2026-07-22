@@ -1,7 +1,7 @@
 import geopandas as gpd
 import pandas as pd
 import osmnx as ox
-from src.helpers import CRS
+from .urbanmobility.crs import CRS
 
 
 def points_gdf(
