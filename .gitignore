@@ -1,18 +1,56 @@
-# --- Python ---
-__pycache__/
-*.py[cod]
+# --- Python build artifacts ---
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
 
-# --- Jupyter ---
+# --- Logs ---
+*.log
+logs/
+
+# --- Environment / secrets ---
+.env
+.env.*
+!.env.example
+
+# --- Jupyter / notebooks ---
 .ipynb_checkpoints/
 
-# --- Virtual environments ---
-.env/
-.venv/
-venv/
+# --- Data (adjust depending on your project) ---
+data/raw/
+data/processed/
+*.csv
+*.parquet
+*.feather
+
+# --- Model artifacts ---
+models/
+*.pkl
+*.pickle
+*.joblib
+*.h5
+*.pt
+*.pth
+
+# --- Cache directories ---
+cache/
+.cache/
 
 # --- OS files ---
 .DS_Store
+Thumbs.db
 
 # --- Editor / IDE ---
 .vscode/
 .idea/
+
+# --- Temporary files ---
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
