@@ -2,7 +2,6 @@ from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 import geopandas as gpd
 import numpy as np
-import pandas as pd
 
 def plot_building_indicators(
         buildingindicators_gdf: gpd.GeoDataFrame,

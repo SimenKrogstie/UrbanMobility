@@ -1,6 +1,6 @@
 import geopandas as gpd
 import folium
-from ..crs import CRS
+from ..spatial.crs import CRS
 
 
 def mobility_map(

@@ -1,6 +1,5 @@
 import geopandas as gpd
-import pandas as pd
-from ..crs import CRS
+from ..spatial.crs import CRS
 
 def building_indicators(
         buildings_gdf: gpd.GeoDataFrame,

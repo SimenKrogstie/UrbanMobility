@@ -1,7 +1,7 @@
 [project]
 name = "urbanmobility"
 version = "0.1.0"
-description = "Analysis tools for bicycle mobility patterns and urban building indicators"
+description = "A Python package for processing, analyzing, and visualizing urban mobility data"
 readme = "README.md"
 authors = [
     { name = "Simen Krogstie", email = "simenkrogstie@gmail.com" }
@@ -20,6 +20,10 @@ dependencies = [
 [build-system]
 requires = ["uv_build>=0.11.29,<0.12.0"]
 build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-root = "src"
+module-name = "urbanmobility"
 
 [dependency-groups]
 dev = [

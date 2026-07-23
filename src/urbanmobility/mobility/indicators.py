@@ -1,6 +1,6 @@
 import geopandas as gpd
 import pandas as pd
-from ..crs import CRS
+from ..spatial.crs import CRS
 
 def mobility_indicators(
         districts_gdf: gpd.GeoDataFrame,

@@ -1,7 +1,6 @@
 import geopandas as gpd
-import pandas as pd
-
-from ..crs import CRS
+from ..spatial.crs import CRS
+import osmnx as ox
 
 def fetch_buildings(
     districts_gdf: gpd.GeoDataFrame,

@@ -1,8 +1,9 @@
 import geopandas as gpd
 import pandas as pd
 from pathlib import Path
-from ..crs import CRS
+from ..spatial.crs import CRS
 from ..config import DEFAULT_CRS
+
 
 def read_csv(
         path: str | Path,

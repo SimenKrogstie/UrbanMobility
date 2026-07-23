@@ -1,6 +1,9 @@
+"""Configuration for urbanmobility."""
+
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).parents(2).resolve()
+PROJECT_ROOT = Path(__file__).parents[2].resolve()
+
 DATA_DIR = PROJECT_ROOT / "data"
 
 RAW_DATA = {
@@ -8,5 +11,5 @@ RAW_DATA = {
     "districts": DATA_DIR / "raw"/"oslo_bydeler_befolkning_2024.geojson",
 }
 
+DEFAULT_CRS = "EPSG:28533"
 CRS_WGS84 = "EPSG:4326"
-CRS_OSLO = "EPSG:28533"

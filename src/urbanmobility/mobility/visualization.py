@@ -1,6 +1,6 @@
 import geopandas as gpd
 import pandas as pd
-from ..crs import CRS
+import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 
