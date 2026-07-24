@@ -1,7 +1,7 @@
 import geopandas as gpd
 from ..spatial.crs import CRS
 
-def building_indicators(
+def calculate_building_indicators(
         buildings_gdf: gpd.GeoDataFrame,
         districts_gdf: gpd.GeoDataFrame,
         district_col: str = "bydel"

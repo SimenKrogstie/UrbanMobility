@@ -1,13 +1,15 @@
+"""Building data processing and analysis."""
+
 from .processing import fetch_buildings
-from .indicators import building_indicators
+from .indicators import calculate_building_indicators
 from .visualization import (
     plot_building_indicators,
-    plot_buildingtypes,
+    plot_building_types,
 )
 
 __all__ = [
     "fetch_buildings",
-    "building_indicators",
+    "calculate_building_indicators",
     "plot_building_indicators",
-    "plot_buildingtypes"
+    "plot_building_types"
 ] 

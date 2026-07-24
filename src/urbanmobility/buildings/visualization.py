@@ -93,7 +93,7 @@ def plot_building_indicators(
     return fig
 
 
-def plot_buildingtypes(
+def plot_building_types(
         buildings_gdf: gpd.GeoDataFrame,
         district_a: str,
         district_b: str,
