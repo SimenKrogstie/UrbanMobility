@@ -78,3 +78,21 @@ def add_trip_districts(
     trips["end_district"] = end_join["end_district"].values
 
     return trips
+
+
+def join_buildings_to_districts(
+    buildings,
+    districts,
+    district_col,
+):
+    district_join = districts[[district_col, "geometry"]]
+
+    return (
+        gpd.sjoin(
+            buildings,
+            district_join,
+            how="left",
+            predicate="within",
+        )
+        .drop(columns=["index_right"])
+    )
