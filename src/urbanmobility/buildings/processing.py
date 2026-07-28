@@ -98,7 +98,7 @@ def _filter_building_geometries(
     ].copy()
 
 
-def _aggregate_building_metrics(
+def _aggregate_building_statistics(
         buildings: gpd.GeoDataFrame,
         district_col:str,
 ) -> pd.DataFrame:
