@@ -1,3 +1,5 @@
+"""Initialization of constants for computation of building metrics"""
+
 AREA_M2 = "area_m2"
 AREA_KM2 = "area_km2"
 
