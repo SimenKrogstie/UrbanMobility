@@ -1,29 +1,32 @@
-import geopandas as gpd
+"""Mathematical calculations only"""
+
+import pandas as pd
+from .constants import *
 
 def add_building_metrics(
-        districts: gpd.GeoDataFrame,
-) -> gpd.GeoDataFrame:
+        districts: pd.DataFrame,
+) -> pd.DataFrame:
 
     districts = districts.copy()
 
-    districts["area_m2"] = districts.geometry.area
-    districts["area_km2"] = districts["area_m2"] / 1_000_000
+    districts[AREA_M2] = districts.geometry.area
+    districts[AREA_KM2] = districts[AREA_M2] / 1_000_000
 
-    districts["buildings_per_km2"] = (
-        districts["num_buildings"]
-        / districts["area_km2"]
+    districts[BUILDING_DENSITY] = (
+        districts[BUILDING_COUNT]
+        / districts[AREA_KM2]
     )
 
-    districts["built_up_area_percent"] = (
-        districts["building_area_m2"]
-        / districts["area_m2"]
+    districts[BUILT_AREA_PERCENT] = (
+        districts[BUILDING_AREA]
+        / districts[AREA_M2]
         * 100
     )
 
-    districts["avg_building_area_m2"] = (
-        districts["building_area_m2"]
-        .div(districts["building_area_m2"]
-        .fillna(0))
+    districts[AVG_BUILDING_AREA] = (
+        districts[BUILDING_AREA]
+        .div(districts[BUILDING_COUNT])
+        .fillna(0)
     )
 
     return districts
