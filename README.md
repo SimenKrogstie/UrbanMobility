@@ -1,3 +1,4 @@
+# This repo is under further development, and are therefore somewhat chaotic at the moment. 
 # Urban Mobility and Building Indicators: An analysis of Bike-Sharing Usage and Urban Structure in Ullern and Grünerløkka
 
 The purpose of this project is to investigate how urban mobility patterns derived from bike-sharing data
