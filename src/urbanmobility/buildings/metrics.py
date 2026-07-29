@@ -1,7 +1,15 @@
 """Mathematical calculations only"""
 
 import pandas as pd
-from .constants import *
+from ..config  import (
+    AREA_M2,
+    AREA_KM2,
+    BUILDING_COUNT,
+    BUILDING_AREA,
+    BUILDING_DENSITY,
+    BUILT_AREA_PERCENT,
+    AVG_BUILDING_AREA,
+)
 
 def add_building_metrics(
         districts: pd.DataFrame,

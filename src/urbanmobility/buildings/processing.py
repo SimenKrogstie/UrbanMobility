@@ -4,11 +4,11 @@ import geopandas as gpd
 import pandas as pd
 import osmnx as ox
 
-from ..config import DEFAULT_CRS
+from ..config import DEFAULT_CRSBUILDING_AREA
 from ..spatial.crs import CRS
 from ..spatial.joins import join_buildings_to_districts
-from .constants import *
 from validation import validate_districts
+
 
 
 def fetch_buildings(

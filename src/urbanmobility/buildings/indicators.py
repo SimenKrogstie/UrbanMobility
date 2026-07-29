@@ -6,8 +6,11 @@ from .validation import validate_building_data
 from .metrics import add_building_metrics
 from .processing import _aggregate_building_statistics
 from ..spatial.crs import CRS
-from ..config import DEFAULT_CRS
-from constants import *
+from ..config  import (
+    DEFAULT_CRS,
+    BUILDING_COUNT,
+    BUILDING_AREA,
+)
 
 def calculate_building_indicators(
         buildings_gdf: gpd.GeoDataFrame,

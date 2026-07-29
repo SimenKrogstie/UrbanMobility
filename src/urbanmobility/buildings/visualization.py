@@ -5,19 +5,18 @@ import matplotlib.pyplot as plt
 import geopandas as gpd
 import numpy as np
 
-from .constants import (
+from .validation import (
+    validate_indicators,
+    validate_districts_exist,
+    validate_building_plot_data,
+)
+
+from ..config  import (
     BUILDING_COUNT,
     BUILDING_AREA,
     BUILDING_DENSITY,
     BUILT_AREA_PERCENT,
     AVG_BUILDING_AREA,
-)
-from .constants import BUILDING_INDICATORS
-
-from .validation import (
-    validate_indicators,
-    validate_districts_exist,
-    validate_building_plot_data,
 )
 
 
@@ -139,18 +138,11 @@ def plot_building_types(
         Matplotlib Figure showing building type distribution.
     
 
-    """    
-    # Checks that the necessary columns exist
-    if district_col not in buildings_gdf.columns:
-        raise KeyError(f"Missing district column {district_col!r}")
-    if type_col not in buildings_gdf.columns:
-        raise KeyError(f"Missing building type column {type_col!r}")
+    """
 
-    _validate_districts_exist(
-        buildings_gdf,
-        [district_a, district_b],
-        column=district_col
-    )
+    # Validate input
+    validate_building_plot_data(buildings_gdf, district_col, type_col)
+    validate_districts_exist(buildings_gdf, [district_a, district_b], district_col)
 
     districts = [
         district_a,
