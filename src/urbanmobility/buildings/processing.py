@@ -11,7 +11,7 @@ from validation import validate_districts
 
 
 
-def fetch_buildings(
+def get_osm_buildings(
     districts_gdf: gpd.GeoDataFrame,
     district_col: str = "bydel",
     query: str = "Oslo, Norway",

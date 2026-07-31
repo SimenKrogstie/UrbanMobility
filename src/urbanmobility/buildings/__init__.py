@@ -1,6 +1,6 @@
 """Building data processing and analysis."""
 
-from .processing import fetch_buildings
+from .processing import get_osm_buildings
 from .indicators import calculate_building_indicators
 from .visualization import (
     plot_building_indicators,
