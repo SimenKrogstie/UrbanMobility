@@ -8,7 +8,7 @@ from .visualization import (
 )
 
 __all__ = [
-    "fetch_buildings",
+    "get_osm_buildings",
     "calculate_building_indicators",
     "plot_building_indicators",
     "plot_building_types"

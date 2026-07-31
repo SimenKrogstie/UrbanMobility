@@ -20,7 +20,6 @@ from ..config  import (
 )
 
 
-
 def plot_building_indicators(
         building_indicators_gdf: gpd.GeoDataFrame,
         district_a: str,

@@ -4,7 +4,7 @@ import geopandas as gpd
 import pandas as pd
 import osmnx as ox
 
-from ..config import DEFAULT_CRS, BUILDING_AREA
+from ..config import DEFAULT_CRS, BUILDING_AREA, BUILDING_COUNT
 from ..spatial.crs import CRS
 from ..spatial.joins import join_buildings_to_districts
 from validation import validate_districts
@@ -51,12 +51,7 @@ def get_osm_buildings(
     buildings = ox.features_from_place(query=query, tags=tags)
 
     # Keep only Polygon/MultiPolygon building geometries
-
     buildings = _filter_building_geometries(buildings)
-
-    buildings = buildings[
-        buildings.geometry.type.isin(["Polygon", "MultiPolygon"])
-    ].copy()
 
     # Ensure building crs
     buildings = CRS(buildings, DEFAULT_CRS, name="buildings", wgs84_missing=True)
@@ -110,8 +105,10 @@ def _aggregate_building_statistics(
     return (
         buildings.groupby(district_col)
         .agg(
-            num_buildings=("geometry", "size"),
-            building_area_m2=("area_m2", "sum")
+            **{
+                BUILDING_COUNT: ("geometry", "size"),
+                BUILDING_AREA: (BUILDING_AREA, "sum"),
+            }
         )
         .reset_index()
     )
