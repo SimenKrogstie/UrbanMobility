@@ -6,16 +6,17 @@ from .validation import validate_building_data
 from .metrics import add_building_metrics
 from .processing import _aggregate_building_statistics
 from ..spatial.crs import CRS
-from ..config  import (
+from ..config import (
     DEFAULT_CRS,
     BUILDING_COUNT,
     BUILDING_AREA,
 )
 
+
 def calculate_building_indicators(
-        buildings_gdf: gpd.GeoDataFrame,
-        districts_gdf: gpd.GeoDataFrame,
-        district_col: str = "bydel",
+    buildings_gdf: gpd.GeoDataFrame,
+    districts_gdf: gpd.GeoDataFrame,
+    district_col: str = "bydel",
 ) -> gpd.GeoDataFrame:
 
     # Validate data and transform CRS
@@ -24,7 +25,10 @@ def calculate_building_indicators(
     districts = CRS(districts_gdf, DEFAULT_CRS, name="districts")
 
     # Compute building metrics
-    buildings_stats = _aggregate_building_statistics(buildings, district_col,)
+    buildings_stats = _aggregate_building_statistics(
+        buildings,
+        district_col,
+    )
 
     districts = districts.merge(
         buildings_stats,
@@ -32,14 +36,9 @@ def calculate_building_indicators(
         how="left",
     )
 
-    districts[
+    districts[[BUILDING_COUNT, BUILDING_AREA]] = districts[
         [BUILDING_COUNT, BUILDING_AREA]
-    ] = (
-        districts[
-            [BUILDING_COUNT, BUILDING_AREA]
-        ]
-        .fillna(0)
-    )
+    ].fillna(0)
 
     districts = add_building_metrics(districts)
 

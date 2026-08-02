@@ -1,10 +1,5 @@
-base_colors = [
-    "#1f77b4",
-    "#ff7f0e",
-    "#2ca02c",
-    "#d62728",
-    "#9467bd"
-]
+base_colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd"]
+
 
 def building_type_color_mapping(building_types: list[str]) -> dict[str, str]:
     """

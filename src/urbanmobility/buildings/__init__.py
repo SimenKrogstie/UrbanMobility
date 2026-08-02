@@ -11,5 +11,5 @@ __all__ = [
     "get_osm_buildings",
     "calculate_building_indicators",
     "plot_building_indicators",
-    "plot_building_types"
-] 
+    "plot_building_types",
+]

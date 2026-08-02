@@ -9,7 +9,7 @@ from .config import DEFAULT_CRS, CRS_WGS84
 
 __version__ = "0.1.0"
 
-__all__ =[
+__all__ = [
     "__version__",
     "buildings",
     "mobility",

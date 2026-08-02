@@ -6,9 +6,9 @@ from ..config import DEFAULT_CRS
 
 
 def read_csv(
-        path: str | Path,
-        sep: str = ",",
-    ) -> pd.DataFrame:
+    path: str | Path,
+    sep: str = ",",
+) -> pd.DataFrame:
     """
     Reads a CSV file and returns its content as a pandas DataFrame.
 
@@ -16,12 +16,12 @@ def read_csv(
     1. Verifies that the file exists.
     2. Reads the file with pandas using the specified separator.
     3. Wraps any reading errors in a clearer IOError.
-    
+
     Parameters
     ----------
     path : str or pathlib.Path
         Path to the CSV file to be read. Can be a string or a 'pathlib.Path' object.
-    sep : str, optional 
+    sep : str, optional
         Separator used in the CSV file.
         Default is ",".
 
@@ -46,17 +46,20 @@ def read_csv(
 
     # Tries to read the file with pandas
     try:
-        df = pd.read_csv(path, sep=sep,)
+        df = pd.read_csv(
+            path,
+            sep=sep,
+        )
     except Exception as e:
         raise IOError(f"Could not read the file '{path}': {e}")
-    
+
     return df
 
 
 def read_geodata(
-        path: str | Path,
-        target_crs: str = DEFAULT_CRS,
-    ) -> gpd.GeoDataFrame:
+    path: str | Path,
+    target_crs: str = DEFAULT_CRS,
+) -> gpd.GeoDataFrame:
     """
     Reads a spatial data file into a GeoDataFrame and transforms it to the desired CRS.
 
@@ -102,8 +105,8 @@ def read_geodata(
         gdf = gpd.read_file(path)
     except Exception as e:
         raise IOError(f"Could not read the file '{path}': {e}")
-    
+
     # Handles CRS with the helper function CRS()
     gdf = CRS(gdf, target_crs, name="data_to_gdf", wgs84_missing=True)
-    
+
     return gdf

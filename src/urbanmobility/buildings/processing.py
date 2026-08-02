@@ -10,7 +10,6 @@ from ..spatial.joins import join_buildings_to_districts
 from validation import validate_districts
 
 
-
 def get_osm_buildings(
     districts_gdf: gpd.GeoDataFrame,
     district_col: str = "bydel",
@@ -28,7 +27,7 @@ def get_osm_buildings(
         Column containing district names.
     query : str, default="Oslo, Norway"
         Place name used for OpenStreetmap query.
-    tags : dict | None, 
+    tags : dict | None,
         OSM tags used to filter features
         Defaults to "{"building": True}".
 
@@ -57,17 +56,13 @@ def get_osm_buildings(
     buildings = CRS(buildings, DEFAULT_CRS, name="buildings", wgs84_missing=True)
 
     # Assign buildings to districts
-    buildings = join_buildings_to_districts(
-        buildings,
-        districts,
-        district_col
-    )
+    buildings = join_buildings_to_districts(buildings, districts, district_col)
 
     return buildings
 
 
 def _filter_building_geometries(
-        buildings: gpd.GeoDataFrame,
+    buildings: gpd.GeoDataFrame,
 ) -> gpd.GeoDataFrame:
     """
     Keep only polgon/multipolygon geometries.
@@ -94,10 +89,10 @@ def _filter_building_geometries(
 
 
 def _aggregate_building_statistics(
-        buildings: gpd.GeoDataFrame,
-        district_col:str,
+    buildings: gpd.GeoDataFrame,
+    district_col: str,
 ) -> pd.DataFrame:
-    
+
     buildings = buildings.copy()
 
     buildings[BUILDING_AREA] = buildings.geometry.area
@@ -112,3 +107,25 @@ def _aggregate_building_statistics(
         )
         .reset_index()
     )
+
+
+def get_available_building_types(
+    buildings: gpd.GeoDataFrame,
+    type_col: str,
+    requested_types: list[str] | None = None,
+) -> list[str]:
+    """
+    Return valid buildingtypes available in the dataset.
+    """
+
+    available_types = buildings[type_col].value_counts()
+
+    if requested_types is None:
+        types = list(available_types.index)
+
+    else:
+        types = [t for t in requested_types if t in available_types.index]
+
+    if not types:
+        raise ValueError("No building types available for plotting.")
+    return types

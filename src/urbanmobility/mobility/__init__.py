@@ -9,5 +9,5 @@ __all__ = [
     "mobility_indicators",
     "plot_mobility_indicators",
     "plot_timeprofile",
-    "plot_timeprofile_directions"
+    "plot_timeprofile_directions",
 ]

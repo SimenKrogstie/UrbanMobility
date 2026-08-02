@@ -2,13 +2,14 @@ import geopandas as gpd
 import pandas as pd
 from .crs import CRS
 
+
 def add_trip_districts(
-        trips_df: pd.DataFrame,
-        start_gdf: gpd.GeoDataFrame,
-        end_gdf: gpd.GeoDataFrame,
-        districts_gdf: gpd.GeoDataFrame,
-        district_col: str = "bydel",
-    ) -> pd.DataFrame:
+    trips_df: pd.DataFrame,
+    start_gdf: gpd.GeoDataFrame,
+    end_gdf: gpd.GeoDataFrame,
+    districts_gdf: gpd.GeoDataFrame,
+    district_col: str = "bydel",
+) -> pd.DataFrame:
     """
     Adds columns with district names for start and end points based on spatial join.
 
@@ -30,8 +31,8 @@ def add_trip_districts(
         GeoDataFrame with shapely Polygon/Multipolygon geometries for districts.
     district_col : str, optional
         Name of the column in "districts_gdf" that contains district names.
-        Default is "bydel". 
-   
+        Default is "bydel".
+
     Returns
     -------
     trips : pd.DataFrame
@@ -51,7 +52,7 @@ def add_trip_districts(
 
     # Checks that districts_gdf has a valid CRS
     districts_gdf = CRS(districts_gdf, str(districts_gdf.crs), name="districts_gdf")
-    
+
     # Reprojects start and end points to the same CRS as districts.
     start_gdf = CRS(start_gdf, str(districts_gdf.crs), name="start_gdf")
     end_gdf = CRS(end_gdf, str(districts_gdf.crs), name="end_gdf")
@@ -61,7 +62,7 @@ def add_trip_districts(
         start_gdf,
         districts_gdf[[district_col, "geometry"]],
         how="left",
-        predicate="within"
+        predicate="within",
     ).rename(columns={district_col: "start_district"})
 
     # Spatial join for end points
@@ -69,7 +70,7 @@ def add_trip_districts(
         end_gdf,
         districts_gdf[[district_col, "geometry"]],
         how="left",
-        predicate="within"
+        predicate="within",
     ).rename(columns={district_col: "end_district"})
 
     # Add new columns to trips_df
@@ -87,12 +88,9 @@ def join_buildings_to_districts(
 ):
     district_join = districts[[district_col, "geometry"]]
 
-    return (
-        gpd.sjoin(
-            buildings,
-            district_join,
-            how="left",
-            predicate="within",
-        )
-        .drop(columns=["index_right"])
-    )
+    return gpd.sjoin(
+        buildings,
+        district_join,
+        how="left",
+        predicate="within",
+    ).drop(columns=["index_right"])

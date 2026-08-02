@@ -4,11 +4,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 
+
 def plot_mobility_indicators(
-        mobility_gdf: gpd.GeoDataFrame,
-        district_a: str,
-        district_b: str
-    ) -> Figure:
+    mobility_gdf: gpd.GeoDataFrame, district_a: str, district_b: str
+) -> Figure:
     """
     Plots a set of mobility indicators as bar plots for two selected districts.
 
@@ -28,7 +27,7 @@ def plot_mobility_indicators(
         Name of the first district to compare.
     district_b : str
         Name of the second district to compare.
-        
+
     Returns
     -------
     fig : Figure
@@ -51,11 +50,19 @@ def plot_mobility_indicators(
 
     # Indicators to be visualized
     indicators = [
-        "trips_started", "trips_ended", "net_trips", "total_trips",
-        "trips_started_per_km2", "trips_ended_per_km2", "net_trips_per_km2", "total_trips_per_km2",
-        "trips_started_per_capita", "trips_ended_per_capita",
-        "net_trips_per_capita", "total_trips_per_capita",
-        "population_density_km2"
+        "trips_started",
+        "trips_ended",
+        "net_trips",
+        "total_trips",
+        "trips_started_per_km2",
+        "trips_ended_per_km2",
+        "net_trips_per_km2",
+        "total_trips_per_km2",
+        "trips_started_per_capita",
+        "trips_ended_per_capita",
+        "net_trips_per_capita",
+        "total_trips_per_capita",
+        "population_density_km2",
     ]
 
     districts = [district_a, district_b]
@@ -65,7 +72,7 @@ def plot_mobility_indicators(
     cols = 4
     rows = int(np.ceil(n / cols))
 
-    fig, axes = plt.subplots(rows, cols, figsize=(4*cols, 4*rows))
+    fig, axes = plt.subplots(rows, cols, figsize=(4 * cols, 4 * rows))
     axes = axes.flatten()
 
     # Plots each indicator in its own subplot
@@ -73,7 +80,7 @@ def plot_mobility_indicators(
         ax = axes[i]
 
         values = df[ind].values
-        colors= ["tab:red" if v < 0 else "green" for v in values]
+        colors = ["tab:red" if v < 0 else "green" for v in values]
 
         ax.bar(districts, values, color=colors, zorder=3)
         ax.set_title(ind.replace("_", " "), fontsize=11)
@@ -81,7 +88,7 @@ def plot_mobility_indicators(
         ax.grid(True, linestyle="--", alpha=0.6, zorder=0)
 
     # Hide empty plots
-    for j in range(i+1, len(axes)):
+    for j in range(i + 1, len(axes)):
         axes[j].set_visible(False)
 
     plt.tight_layout()
@@ -89,16 +96,16 @@ def plot_mobility_indicators(
 
 
 def plot_timeprofile(
-        trips_df: pd.DataFrame,
-        district_a: str,
-        district_b: str,
-        start_col: str = "start_district",
-        end_col: str = "end_district",
-        time_column: str = "started_at",
+    trips_df: pd.DataFrame,
+    district_a: str,
+    district_b: str,
+    start_col: str = "start_district",
+    end_col: str = "end_district",
+    time_column: str = "started_at",
 ) -> Figure:
     """
     Plots time profiles (per hour) for two districts.
-    
+
     The function creates a figure with two subplots:
     - Left: number of trips per hour starting in each district.
     - Right: number of trips per hour ending in each district.
@@ -125,7 +132,7 @@ def plot_timeprofile(
     -------
     fig : Figure
         Figure with two line plots showing start and end of trips per hour.
-    
+
     Raises
     ------
     KeyError
@@ -163,7 +170,8 @@ def plot_timeprofile(
             num_start.values,
             marker="o",
             color=color,
-            label=f"{district}")
+            label=f"{district}",
+        )
 
     ax_start.set_title("Trips starting in the districts")
     ax_start.set_xlabel("Time of day")
@@ -181,7 +189,8 @@ def plot_timeprofile(
             num_slutt.values,
             marker="o",
             color=color,
-            label=f"{district}")
+            label=f"{district}",
+        )
 
     ax_slutt.set_title("Trips ending in the districts")
     ax_slutt.set_xlabel("Time of day")
@@ -194,12 +203,12 @@ def plot_timeprofile(
 
 
 def plot_timeprofile_directions(
-        trips_df: pd.DataFrame,
-        district_a: str,
-        district_b: str,
-        start_col: str = "start_district",
-        end_col: str = "end_district",
-        time_column: str = "started_at",
+    trips_df: pd.DataFrame,
+    district_a: str,
+    district_b: str,
+    start_col: str = "start_district",
+    end_col: str = "end_district",
+    time_column: str = "started_at",
 ) -> Figure:
     """
     Plots time profile (per hour) for trips between two districts in both directions.
@@ -230,7 +239,7 @@ def plot_timeprofile_directions(
     -------
     fig : Figure
         Figure with line plot showing time profile for both directions.
-    
+
     Raises
     ------
     KeyError
@@ -251,12 +260,12 @@ def plot_timeprofile_directions(
     df = df.dropna(subset=[time_column])
     df["time"] = df[time_column].dt.hour
 
-    fig, ax = plt.subplots(figsize=(10,5))
+    fig, ax = plt.subplots(figsize=(10, 5))
 
     # Defines directions
     directions = [
         (district_a, district_b, "tab:blue"),
-        (district_b, district_a, "tab:orange")
+        (district_b, district_a, "tab:orange"),
     ]
 
     for start_district, end_district, color in directions:
@@ -268,7 +277,7 @@ def plot_timeprofile_directions(
             count.values,
             marker="o",
             color=color,
-            label=f"{start_district} -> {end_district}"
+            label=f"{start_district} -> {end_district}",
         )
 
     ax.set_xlabel("Time of day")
@@ -276,5 +285,5 @@ def plot_timeprofile_directions(
     ax.set_title(f"Time profile for trips between {district_a} and {district_b}")
     ax.grid(True, linestyle="--", alpha=0.6)
     ax.legend()
-    
+
     return fig

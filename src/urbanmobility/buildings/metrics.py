@@ -1,7 +1,7 @@
 """Mathematical calculations only"""
 
 import pandas as pd
-from ..config  import (
+from ..config import (
     AREA_M2,
     AREA_KM2,
     BUILDING_COUNT,
@@ -11,8 +11,9 @@ from ..config  import (
     AVG_BUILDING_AREA,
 )
 
+
 def add_building_metrics(
-        districts: pd.DataFrame,
+    districts: pd.DataFrame,
 ) -> pd.DataFrame:
 
     districts = districts.copy()
@@ -20,21 +21,12 @@ def add_building_metrics(
     districts[AREA_M2] = districts.geometry.area
     districts[AREA_KM2] = districts[AREA_M2] / 1_000_000
 
-    districts[BUILDING_DENSITY] = (
-        districts[BUILDING_COUNT]
-        / districts[AREA_KM2]
-    )
+    districts[BUILDING_DENSITY] = districts[BUILDING_COUNT] / districts[AREA_KM2]
 
-    districts[BUILT_AREA_PERCENT] = (
-        districts[BUILDING_AREA]
-        / districts[AREA_M2]
-        * 100
-    )
+    districts[BUILT_AREA_PERCENT] = districts[BUILDING_AREA] / districts[AREA_M2] * 100
 
     districts[AVG_BUILDING_AREA] = (
-        districts[BUILDING_AREA]
-        .div(districts[BUILDING_COUNT])
-        .fillna(0)
+        districts[BUILDING_AREA].div(districts[BUILDING_COUNT]).fillna(0)
     )
 
     return districts

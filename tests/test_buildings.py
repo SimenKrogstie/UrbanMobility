@@ -6,6 +6,7 @@ def test_buildings_public_api():
     assert callable(buildings.plot_building_indicators)
     assert callable(buildings.plot_building_types)
 
+
 def test_buildings_exports():
     from urbanmobility import buildings
 
