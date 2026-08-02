@@ -3,23 +3,35 @@
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 import geopandas as gpd
-import numpy as np
-
-from processing import get_available_building_types
 
 from .validation import (
     validate_indicators,
-    _validate_districts_exist,
+    validate_districts_exist,
     validate_building_plot_data,
 )
 
-from ..config import (
-    BUILDING_COUNT,
-    BUILDING_AREA,
-    BUILDING_DENSITY,
-    BUILT_AREA_PERCENT,
-    AVG_BUILDING_AREA,
-)
+from ..config import BUILDING_INDICATORS
+
+def _resolve_building_types(
+    gdf: gpd.GeoDataFrame,
+    type_col: str,
+    requested_types: list[str] | None = None,
+) -> list[str]:
+    """
+    Return valid buildingtypes available in the dataset.
+    """
+    available = gdf[type_col].value_counts().index
+
+    types = (
+        list(available)
+        if requested_types is None
+        else [t for t in requested_types if t in available]
+    )
+
+    if not types:
+        raise ValueError("No building types available for plotting.")
+    
+    return types
 
 
 def plot_building_indicators(
@@ -48,28 +60,17 @@ def plot_building_indicators(
         Matplotlib Figure containing indicator comparisons.
 
     """
-    BUILDING_INDICATORS = [
-        BUILDING_COUNT,
-        BUILDING_AREA,
-        BUILDING_DENSITY,
-        BUILT_AREA_PERCENT,
-        AVG_BUILDING_AREA,
-    ]
+    # Districts in focus
+    focus = (district_a, district_b)
 
     # Validate input
     validate_indicators(building_indicators_gdf, BUILDING_INDICATORS)
-    _validate_districts_exist(
-        building_indicators_gdf, [district_a, district_b], district_col
-    )
-
-    df = building_indicators_gdf.loc[[district_a, district_b]]
-
-    districts = [district_a, district_b]
+    validate_districts_exist(building_indicators_gdf, focus, district_col)
+    df = building_indicators_gdf.loc[list(focus)]
 
     # Size of subplot
-    n = len(BUILDING_INDICATORS)
     cols = 3
-    rows = int(np.ceil(n / cols))
+    rows = (len(BUILDING_INDICATORS) + cols - 1) // cols
 
     fig, axes = plt.subplots(rows, cols, figsize=(4 * cols, 4 * rows), squeeze=False)
 
@@ -78,7 +79,7 @@ def plot_building_indicators(
     for ax, indicator in zip(axes, BUILDING_INDICATORS):
         values = df[indicator].values
 
-        ax.bar(districts, values, zorder=3)
+        ax.bar(focus, values, zorder=3)
         ax.set_title(indicator.replace("_", " "))
         ax.tick_params(axis="x", rotation=30)
         ax.grid(True, linestyle="--", alpha=0.6, zorder=0)
@@ -131,27 +132,24 @@ def plot_building_types(
     """
 
     # Districts to focus on
-    focus = [district_a, district_b]
+    focus = (district_a, district_b)
 
     # Validate input
     validate_building_plot_data(buildings_gdf, district_col, type_col)
-    _validate_districts_exist(buildings_gdf, focus, district_col)
+    validate_districts_exist(buildings_gdf, focus, district_col)
 
-    df = buildings_gdf.copy()
-
+    df = buildings_gdf[buildings_gdf[district_col].isin(focus)].copy()
     df[type_col] = df[type_col].fillna("unknown")
 
-    df = df[df[district_col].isin(focus)]
-
-    types = get_available_building_types(df, type_col, types)
+    types = _resolve_building_types(df, type_col, types)
 
     fig, axes = plt.subplots(2, 1, figsize=(9, 5), sharex=True, sharey=not normalize)
-
     axes = axes.flatten()
 
-    for ax, district in zip(axes, focus):
-        subset = df[df[district_col] == district]
+    groups = df.groupby(district_col)
 
+    for ax, district in zip(axes, focus):
+        subset = groups.get_group(district)
         counts = (
             subset[type_col]
             .value_counts()
@@ -171,7 +169,7 @@ def plot_building_types(
         ax.set_title(f"Building types in {district}" + (" (%)" if normalize else ""))
         ax.set_ylabel("Percentage" if normalize else "Number of buildings")
         ax.tick_params(axis="x", rotation=45)
-        ax.grid(True, linestyle="--", alpa=0.6)
+        ax.grid(True, linestyle="--", alpha=0.6)
 
     plt.tight_layout()
 

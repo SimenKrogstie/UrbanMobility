@@ -22,15 +22,17 @@ def validate_geodataframe(
         raise ValueError(f"{name} contains invalid geometries.")
 
 
-def validate_column(
+def validate_columns(
     gdf: gpd.GeoDataFrame,
-    column: str,
+    columns: list[str],
     name: str,
 ) -> None:
-    """Validate that a column exists."""
+    """Validate that required columns exist."""
 
-    if column not in gdf.columns:
-        raise KeyError(f"{column!r} missing from {name}")
+    missing = [col for col in columns if col not in gdf.columns]
+
+    if missing:
+        raise KeyError(f"Missing columns in {name}: {missing}")
 
 
 def validate_districts(
@@ -44,9 +46,9 @@ def validate_districts(
         "districts",
     )
 
-    validate_column(
+    validate_columns(
         districts,
-        district_col,
+        [district_col],
         "districts",
     )
 
@@ -68,9 +70,9 @@ def validate_building_data(
         district_col,
     )
 
-    validate_column(
+    validate_columns(
         buildings,
-        district_col,
+        [district_col],
         "buildings",
     )
 
@@ -87,7 +89,7 @@ def validate_indicators(
         raise KeyError(f"Missing indicator columns: {missing}")
 
 
-def _validate_districts_exist(
+def validate_districts_exist(
     gdf: gpd.GeoDataFrame,
     districts: list[str],
     district_col: str,
@@ -112,14 +114,8 @@ def validate_building_plot_data(
         "buildings",
     )
 
-    validate_column(
+    validate_columns(
         buildings,
-        district_col,
-        "buildings",
-    )
-
-    validate_column(
-        buildings,
-        type_col,
+        [district_col, type_col],
         "buildings",
     )

@@ -16,8 +16,6 @@ def add_building_metrics(
     districts: pd.DataFrame,
 ) -> pd.DataFrame:
 
-    districts = districts.copy()
-
     districts[AREA_M2] = districts.geometry.area
     districts[AREA_KM2] = districts[AREA_M2] / 1_000_000
 

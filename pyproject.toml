@@ -36,10 +36,4 @@ dev = [
 testpaths = ["tests"]
 
 [tool.ruff]
-line-lenght = 88
-
-[tool.uv.scripts]
-lint = "ruff check ."
-format = "ruff format ."
-typecheck = "pyright"
-test = "pytest"
+line-length = 88

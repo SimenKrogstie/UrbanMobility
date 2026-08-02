@@ -7,7 +7,7 @@ import osmnx as ox
 from ..config import DEFAULT_CRS, BUILDING_AREA, BUILDING_COUNT
 from ..spatial.crs import CRS
 from ..spatial.joins import join_buildings_to_districts
-from validation import validate_districts
+from .validation import validate_districts
 
 
 def get_osm_buildings(
@@ -93,8 +93,6 @@ def _aggregate_building_statistics(
     district_col: str,
 ) -> pd.DataFrame:
 
-    buildings = buildings.copy()
-
     buildings[BUILDING_AREA] = buildings.geometry.area
 
     return (
@@ -107,25 +105,3 @@ def _aggregate_building_statistics(
         )
         .reset_index()
     )
-
-
-def get_available_building_types(
-    buildings: gpd.GeoDataFrame,
-    type_col: str,
-    requested_types: list[str] | None = None,
-) -> list[str]:
-    """
-    Return valid buildingtypes available in the dataset.
-    """
-
-    available_types = buildings[type_col].value_counts()
-
-    if requested_types is None:
-        types = list(available_types.index)
-
-    else:
-        types = [t for t in requested_types if t in available_types.index]
-
-    if not types:
-        raise ValueError("No building types available for plotting.")
-    return types
