@@ -1,5 +1,6 @@
 """Mathematical calculations only"""
 
+import geopandas as gpd
 import pandas as pd
 from ..config import (
     AREA_M2,
@@ -10,6 +11,25 @@ from ..config import (
     BUILT_AREA_PERCENT,
     AVG_BUILDING_AREA,
 )
+
+
+def aggregate_building_statistics(
+    buildings: gpd.GeoDataFrame,
+    district_col: str,
+) -> pd.DataFrame:
+
+    buildings[BUILDING_AREA] = buildings.geometry.area
+
+    return (
+        buildings.groupby(district_col)
+        .agg(
+            **{
+                BUILDING_COUNT: ("geometry", "size"),
+                BUILDING_AREA: (BUILDING_AREA, "sum"),
+            }
+        )
+        .reset_index()
+    )
 
 
 def add_building_metrics(

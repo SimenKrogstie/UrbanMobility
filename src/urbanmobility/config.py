@@ -12,7 +12,7 @@ RAW_DATA = {
 }
 
 # CRS constants
-DEFAULT_CRS = "EPSG:28533"
+DEFAULT_CRS = "EPSG:25833"
 CRS_WGS84 = "EPSG:4326"
 
 # Buildings constants

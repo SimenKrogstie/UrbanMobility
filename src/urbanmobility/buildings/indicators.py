@@ -3,8 +3,7 @@
 import geopandas as gpd
 
 from .validation import validate_building_data
-from .metrics import add_building_metrics
-from .processing import _aggregate_building_statistics
+from .metrics import aggregate_building_statistics, add_building_metrics
 from ..spatial.crs import CRS
 from ..config import (
     DEFAULT_CRS,
@@ -25,7 +24,7 @@ def calculate_building_indicators(
     districts = CRS(districts_gdf, DEFAULT_CRS, name="districts")
 
     # Compute building metrics
-    buildings_stats = _aggregate_building_statistics(
+    buildings_stats = aggregate_building_statistics(
         buildings,
         district_col,
     )

@@ -1,4 +1,4 @@
-"""Building visualiozation functions."""
+"""Building visualization functions."""
 
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt

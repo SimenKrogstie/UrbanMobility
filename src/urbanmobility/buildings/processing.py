@@ -1,10 +1,9 @@
 """Fetch and transform raw building data"""
 
 import geopandas as gpd
-import pandas as pd
 import osmnx as ox
 
-from ..config import DEFAULT_CRS, BUILDING_AREA, BUILDING_COUNT
+from ..config import DEFAULT_CRS
 from ..spatial.crs import CRS
 from ..spatial.joins import join_buildings_to_districts
 from .validation import validate_districts
@@ -23,10 +22,10 @@ def get_osm_buildings(
     ----------
     districts_gdf : gpd.GeoDataFrame
         District Polygon/Multipolygon with a district identifier column.
-    district_col : str, defaul="bydel"
+    district_col : str, default="bydel"
         Column containing district names.
     query : str, default="Oslo, Norway"
-        Place name used for OpenStreetmap query.
+        Place name used for OpenStreetMap query.
     tags : dict | None,
         OSM tags used to filter features
         Defaults to "{"building": True}".
@@ -86,22 +85,3 @@ def _filter_building_geometries(
             ]
         )
     ].copy()
-
-
-def _aggregate_building_statistics(
-    buildings: gpd.GeoDataFrame,
-    district_col: str,
-) -> pd.DataFrame:
-
-    buildings[BUILDING_AREA] = buildings.geometry.area
-
-    return (
-        buildings.groupby(district_col)
-        .agg(
-            **{
-                BUILDING_COUNT: ("geometry", "size"),
-                BUILDING_AREA: (BUILDING_AREA, "sum"),
-            }
-        )
-        .reset_index()
-    )
