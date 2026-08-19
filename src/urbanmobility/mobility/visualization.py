@@ -1,20 +1,14 @@
 import geopandas as gpd
 import pandas as pd
-import numpy as np
+from ..crs import CRS
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 
-from ..config import MOBILITY_INDICATORS
-from .validation import (
-    validate_districts_exist,
-    validate_indicators,
-    validate_timeprofile_data,
-)
-
-
 def plot_mobility_indicators(
-    mobility_gdf: gpd.GeoDataFrame, district_a: str, district_b: str
-) -> Figure:
+        mobility_gdf: gpd.GeoDataFrame,
+        district_a: str,
+        district_b: str
+    ) -> Figure:
     """
     Plots a set of mobility indicators as bar plots for two selected districts.
 
@@ -34,7 +28,7 @@ def plot_mobility_indicators(
         Name of the first district to compare.
     district_b : str
         Name of the second district to compare.
-
+        
     Returns
     -------
     fig : Figure
@@ -47,17 +41,22 @@ def plot_mobility_indicators(
 
     """
 
-    # Checks that the indicator columns and the districts exist
-    validate_indicators(mobility_gdf, list(MOBILITY_INDICATORS))
-    validate_districts_exist(
-        mobility_gdf, [district_a, district_b], str(mobility_gdf.index.name)
-    )
+    # Checks that the districts exist
+    for i in [district_a, district_b]:
+        if i not in mobility_gdf.index:
+            raise KeyError(f"District {i!r} does not exist in mobility_gdf.")
 
     # Filters on the selected districts
     df = mobility_gdf.loc[[district_a, district_b]].copy()
 
     # Indicators to be visualized
-    indicators = list(MOBILITY_INDICATORS)
+    indicators = [
+        "trips_started", "trips_ended", "net_trips", "total_trips",
+        "trips_started_per_km2", "trips_ended_per_km2", "net_trips_per_km2", "total_trips_per_km2",
+        "trips_started_per_capita", "trips_ended_per_capita",
+        "net_trips_per_capita", "total_trips_per_capita",
+        "population_density_km2"
+    ]
 
     districts = [district_a, district_b]
 
@@ -66,7 +65,7 @@ def plot_mobility_indicators(
     cols = 4
     rows = int(np.ceil(n / cols))
 
-    fig, axes = plt.subplots(rows, cols, figsize=(4 * cols, 4 * rows))
+    fig, axes = plt.subplots(rows, cols, figsize=(4*cols, 4*rows))
     axes = axes.flatten()
 
     # Plots each indicator in its own subplot
@@ -74,7 +73,7 @@ def plot_mobility_indicators(
         ax = axes[i]
 
         values = df[ind].values
-        colors = ["tab:red" if v < 0 else "green" for v in values]
+        colors= ["tab:red" if v < 0 else "green" for v in values]
 
         ax.bar(districts, values, color=colors, zorder=3)
         ax.set_title(ind.replace("_", " "), fontsize=11)
@@ -82,7 +81,7 @@ def plot_mobility_indicators(
         ax.grid(True, linestyle="--", alpha=0.6, zorder=0)
 
     # Hide empty plots
-    for j in range(n, len(axes)):
+    for j in range(i+1, len(axes)):
         axes[j].set_visible(False)
 
     plt.tight_layout()
@@ -90,16 +89,16 @@ def plot_mobility_indicators(
 
 
 def plot_timeprofile(
-    trips_df: pd.DataFrame,
-    district_a: str,
-    district_b: str,
-    start_col: str = "start_district",
-    end_col: str = "end_district",
-    time_column: str = "started_at",
+        trips_df: pd.DataFrame,
+        district_a: str,
+        district_b: str,
+        start_col: str = "start_district",
+        end_col: str = "end_district",
+        time_column: str = "started_at",
 ) -> Figure:
     """
     Plots time profiles (per hour) for two districts.
-
+    
     The function creates a figure with two subplots:
     - Left: number of trips per hour starting in each district.
     - Right: number of trips per hour ending in each district.
@@ -126,16 +125,18 @@ def plot_timeprofile(
     -------
     fig : Figure
         Figure with two line plots showing start and end of trips per hour.
-
+    
     Raises
     ------
     KeyError
         If "start_col", "end_col" or "time_column" is missing in "trips_df".
     """
-    # Checks that necessary columns exist
-    validate_timeprofile_data(trips_df, start_col, end_col, time_column)
-
     df = trips_df.copy()
+
+    # Checks that necessary columns exist
+    for col in [start_col, end_col, time_column]:
+        if col not in df.columns:
+            raise KeyError(f"Column {col!r} is missing in trips_df.")
 
     # Ensures datetime
     if not pd.api.types.is_datetime64_any_dtype(df[time_column]):
@@ -162,8 +163,7 @@ def plot_timeprofile(
             num_start.values,
             marker="o",
             color=color,
-            label=f"{district}",
-        )
+            label=f"{district}")
 
     ax_start.set_title("Trips starting in the districts")
     ax_start.set_xlabel("Time of day")
@@ -181,8 +181,7 @@ def plot_timeprofile(
             num_slutt.values,
             marker="o",
             color=color,
-            label=f"{district}",
-        )
+            label=f"{district}")
 
     ax_slutt.set_title("Trips ending in the districts")
     ax_slutt.set_xlabel("Time of day")
@@ -195,12 +194,12 @@ def plot_timeprofile(
 
 
 def plot_timeprofile_directions(
-    trips_df: pd.DataFrame,
-    district_a: str,
-    district_b: str,
-    start_col: str = "start_district",
-    end_col: str = "end_district",
-    time_column: str = "started_at",
+        trips_df: pd.DataFrame,
+        district_a: str,
+        district_b: str,
+        start_col: str = "start_district",
+        end_col: str = "end_district",
+        time_column: str = "started_at",
 ) -> Figure:
     """
     Plots time profile (per hour) for trips between two districts in both directions.
@@ -231,16 +230,18 @@ def plot_timeprofile_directions(
     -------
     fig : Figure
         Figure with line plot showing time profile for both directions.
-
+    
     Raises
     ------
     KeyError
         If required columns are missing in "trips_df".
     """
-    # Checks that necessary columns exist
-    validate_timeprofile_data(trips_df, start_col, end_col, time_column)
-
     df = trips_df.copy()
+
+    # Checks that necessary columns exist
+    for col in [start_col, end_col, time_column]:
+        if col not in df.columns:
+            raise KeyError(f"Column {col!r} is missing in trips_df.")
 
     # Ensures datetime
     if not pd.api.types.is_datetime64_any_dtype(df[time_column]):
@@ -250,12 +251,12 @@ def plot_timeprofile_directions(
     df = df.dropna(subset=[time_column])
     df["time"] = df[time_column].dt.hour
 
-    fig, ax = plt.subplots(figsize=(10, 5))
+    fig, ax = plt.subplots(figsize=(10,5))
 
     # Defines directions
     directions = [
         (district_a, district_b, "tab:blue"),
-        (district_b, district_a, "tab:orange"),
+        (district_b, district_a, "tab:orange")
     ]
 
     for start_district, end_district, color in directions:
@@ -267,7 +268,7 @@ def plot_timeprofile_directions(
             count.values,
             marker="o",
             color=color,
-            label=f"{start_district} -> {end_district}",
+            label=f"{start_district} -> {end_district}"
         )
 
     ax.set_xlabel("Time of day")
@@ -275,5 +276,5 @@ def plot_timeprofile_directions(
     ax.set_title(f"Time profile for trips between {district_a} and {district_b}")
     ax.grid(True, linestyle="--", alpha=0.6)
     ax.legend()
-
+    
     return fig
