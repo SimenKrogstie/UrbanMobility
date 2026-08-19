@@ -1,6 +1,7 @@
 """Check input assumptions"""
 
 import geopandas as gpd
+import pandas as pd
 
 
 def validate_geodataframe(
@@ -23,7 +24,7 @@ def validate_geodataframe(
 
 
 def validate_columns(
-    gdf: gpd.GeoDataFrame,
+    gdf: gpd.GeoDataFrame | pd.DataFrame,
     columns: list[str],
     name: str,
 ) -> None:
@@ -94,9 +95,14 @@ def validate_districts_exist(
     districts: list[str],
     district_col: str,
 ) -> None:
-    """Validate requested districts exist."""
+    """Validate requested districts exist.
 
-    missing = [d for d in districts if d not in gdf[district_col].unique()]
+    Checks the index when it is already set to ``district_col`` (as with the
+    output of ``calculate_building_indicators``), otherwise checks the column.
+    """
+
+    available = gdf.index if gdf.index.name == district_col else gdf[district_col]
+    missing = [d for d in districts if d not in available.unique()]
 
     if missing:
         raise KeyError(f"Districts not found: {missing}")

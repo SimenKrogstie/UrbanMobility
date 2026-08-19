@@ -1,9 +1,13 @@
 import geopandas as gpd
 import pandas as pd
+
+from ..config import DEFAULT_CRS, TRIPS_ENDED, TRIPS_STARTED
 from ..spatial.crs import CRS
+from .metrics import add_mobility_metrics, aggregate_trip_counts
+from .validation import validate_mobility_data
 
 
-def mobility_indicators(
+def calculate_mobility_indicators(
     districts_gdf: gpd.GeoDataFrame,
     trips_df: pd.DataFrame,
     population_col: str = "befolkning_2024",
@@ -16,14 +20,14 @@ def mobility_indicators(
 
     The function:
     1. Ensures valid CRS and geometry in "districts_gdf".
-    2. Calculates area and population density for each district.
-    3. Counts number of trip start and end points per district.
-    4. Combines results into a GeoDataFrame with indicators per district.
+    2. Counts number of trip start and end points per district.
+    3. Calculates area, population density, and derived trip metrics for each
+       district.
 
     Parameters
     ----------
     districts_gdf : gpd.GeoDataFrame
-        GeoDataFrame with districtpolygons and population data.
+        GeoDataFrame with district polygons and population data.
     trips_df : pd.DataFrame
         DataFrame with trip data and start and end districts.
     population_col : str, optional
@@ -41,7 +45,7 @@ def mobility_indicators(
 
     Returns
     -------
-    mobilitet : gpd.GeoDataFrame
+    mobility : gpd.GeoDataFrame
         GeoDataFrame indexed on "district_col" containing:
         - geometry
         - area (km^2)
@@ -58,50 +62,19 @@ def mobility_indicators(
         If "districts_gdf" lacks CRS or CRS transformation fails.
     """
 
-    # Ensures valid geometry and CRS
-    districts_gdf = CRS(districts_gdf, str(districts_gdf.crs), name="districts_gdf")
-
-    # Beregner areal i km^2 og befolkningstetthet
-    districts = districts_gdf.copy()
-    districts["area_km2"] = districts.geometry.area / 1000000
-    districts["population_density_km2"] = (
-        districts[population_col] / districts["area_km2"]
+    validate_mobility_data(
+        districts_gdf, trips_df, population_col, district_col, start_col, end_col
     )
 
-    # Counts trips started and ended per district
-    start_per_district = trips_df.groupby(start_col).size().rename("trips_started")
+    districts = CRS(districts_gdf, DEFAULT_CRS, name="districts_gdf")
 
-    end_per_district = trips_df.groupby(end_col).size().rename("trips_ended")
+    started, ended = aggregate_trip_counts(trips_df, start_col, end_col)
 
-    # Combining district and trip data
-    mobility = (
-        districts.set_index(district_col)[
-            ["geometry", "area_km2", population_col, "population_density_km2"]
-        ]
-        .join([start_per_district, end_per_district])
-        .fillna(0)
+    mobility = districts.set_index(district_col)[["geometry", population_col]].join(
+        [started, ended]
     )
+    mobility[[TRIPS_STARTED, TRIPS_ENDED]] = mobility[
+        [TRIPS_STARTED, TRIPS_ENDED]
+    ].fillna(0)
 
-    # Computes net and total number of trips
-    mobility["net_trips"] = mobility["trips_ended"] - mobility["trips_started"]
-    mobility["total_trips"] = mobility["trips_started"] + mobility["trips_ended"]
-
-    # Computes area-based indicators
-    mobility["trips_started_per_km2"] = mobility["trips_started"] / mobility["area_km2"]
-    mobility["trips_ended_per_km2"] = mobility["trips_ended"] / mobility["area_km2"]
-    mobility["net_trips_per_km2"] = mobility["net_trips"] / mobility["area_km2"]
-    mobility["total_trips_per_km2"] = mobility["total_trips"] / mobility["area_km2"]
-
-    # Computes population-based indicators
-    mobility["trips_started_per_capita"] = (
-        mobility["trips_started"] / mobility[population_col]
-    )
-    mobility["trips_ended_per_capita"] = (
-        mobility["trips_ended"] / mobility[population_col]
-    )
-    mobility["net_trips_per_capita"] = mobility["net_trips"] / mobility[population_col]
-    mobility["total_trips_per_capita"] = (
-        mobility["total_trips"] / mobility[population_col]
-    )
-
-    return mobility
+    return add_mobility_metrics(mobility, population_col)

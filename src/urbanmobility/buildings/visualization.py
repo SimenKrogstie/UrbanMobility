@@ -12,6 +12,7 @@ from .validation import (
 
 from ..config import BUILDING_INDICATORS
 
+
 def _resolve_building_types(
     gdf: gpd.GeoDataFrame,
     type_col: str,
@@ -30,7 +31,7 @@ def _resolve_building_types(
 
     if not types:
         raise ValueError("No building types available for plotting.")
-    
+
     return types
 
 

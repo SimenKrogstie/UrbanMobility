@@ -32,3 +32,34 @@ BUILDING_INDICATORS = (
     BUILT_AREA_PERCENT,
     AVG_BUILDING_AREA,
 )
+
+# Mobility constants
+POPULATION_DENSITY = "population_density_km2"
+TRIPS_STARTED = "trips_started"
+TRIPS_ENDED = "trips_ended"
+NET_TRIPS = "net_trips"
+TOTAL_TRIPS = "total_trips"
+TRIPS_STARTED_PER_KM2 = "trips_started_per_km2"
+TRIPS_ENDED_PER_KM2 = "trips_ended_per_km2"
+NET_TRIPS_PER_KM2 = "net_trips_per_km2"
+TOTAL_TRIPS_PER_KM2 = "total_trips_per_km2"
+TRIPS_STARTED_PER_CAPITA = "trips_started_per_capita"
+TRIPS_ENDED_PER_CAPITA = "trips_ended_per_capita"
+NET_TRIPS_PER_CAPITA = "net_trips_per_capita"
+TOTAL_TRIPS_PER_CAPITA = "total_trips_per_capita"
+
+MOBILITY_INDICATORS = (
+    TRIPS_STARTED,
+    TRIPS_ENDED,
+    NET_TRIPS,
+    TOTAL_TRIPS,
+    TRIPS_STARTED_PER_KM2,
+    TRIPS_ENDED_PER_KM2,
+    NET_TRIPS_PER_KM2,
+    TOTAL_TRIPS_PER_KM2,
+    TRIPS_STARTED_PER_CAPITA,
+    TRIPS_ENDED_PER_CAPITA,
+    NET_TRIPS_PER_CAPITA,
+    TOTAL_TRIPS_PER_CAPITA,
+    POPULATION_DENSITY,
+)

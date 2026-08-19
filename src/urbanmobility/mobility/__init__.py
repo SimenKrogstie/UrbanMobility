@@ -1,4 +1,4 @@
-from .indicators import mobility_indicators
+from .indicators import calculate_mobility_indicators
 from .visualization import (
     plot_mobility_indicators,
     plot_timeprofile_directions,
@@ -6,7 +6,7 @@ from .visualization import (
 )
 
 __all__ = [
-    "mobility_indicators",
+    "calculate_mobility_indicators",
     "plot_mobility_indicators",
     "plot_timeprofile",
     "plot_timeprofile_directions",

@@ -4,6 +4,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 
+from ..config import MOBILITY_INDICATORS
+from .validation import (
+    validate_districts_exist,
+    validate_indicators,
+    validate_timeprofile_data,
+)
+
 
 def plot_mobility_indicators(
     mobility_gdf: gpd.GeoDataFrame, district_a: str, district_b: str
@@ -40,30 +47,17 @@ def plot_mobility_indicators(
 
     """
 
-    # Checks that the districts exist
-    for i in [district_a, district_b]:
-        if i not in mobility_gdf.index:
-            raise KeyError(f"District {i!r} does not exist in mobility_gdf.")
+    # Checks that the indicator columns and the districts exist
+    validate_indicators(mobility_gdf, list(MOBILITY_INDICATORS))
+    validate_districts_exist(
+        mobility_gdf, [district_a, district_b], str(mobility_gdf.index.name)
+    )
 
     # Filters on the selected districts
     df = mobility_gdf.loc[[district_a, district_b]].copy()
 
     # Indicators to be visualized
-    indicators = [
-        "trips_started",
-        "trips_ended",
-        "net_trips",
-        "total_trips",
-        "trips_started_per_km2",
-        "trips_ended_per_km2",
-        "net_trips_per_km2",
-        "total_trips_per_km2",
-        "trips_started_per_capita",
-        "trips_ended_per_capita",
-        "net_trips_per_capita",
-        "total_trips_per_capita",
-        "population_density_km2",
-    ]
+    indicators = list(MOBILITY_INDICATORS)
 
     districts = [district_a, district_b]
 
@@ -88,7 +82,7 @@ def plot_mobility_indicators(
         ax.grid(True, linestyle="--", alpha=0.6, zorder=0)
 
     # Hide empty plots
-    for j in range(i + 1, len(axes)):
+    for j in range(n, len(axes)):
         axes[j].set_visible(False)
 
     plt.tight_layout()
@@ -138,12 +132,10 @@ def plot_timeprofile(
     KeyError
         If "start_col", "end_col" or "time_column" is missing in "trips_df".
     """
-    df = trips_df.copy()
-
     # Checks that necessary columns exist
-    for col in [start_col, end_col, time_column]:
-        if col not in df.columns:
-            raise KeyError(f"Column {col!r} is missing in trips_df.")
+    validate_timeprofile_data(trips_df, start_col, end_col, time_column)
+
+    df = trips_df.copy()
 
     # Ensures datetime
     if not pd.api.types.is_datetime64_any_dtype(df[time_column]):
@@ -245,12 +237,10 @@ def plot_timeprofile_directions(
     KeyError
         If required columns are missing in "trips_df".
     """
-    df = trips_df.copy()
-
     # Checks that necessary columns exist
-    for col in [start_col, end_col, time_column]:
-        if col not in df.columns:
-            raise KeyError(f"Column {col!r} is missing in trips_df.")
+    validate_timeprofile_data(trips_df, start_col, end_col, time_column)
+
+    df = trips_df.copy()
 
     # Ensures datetime
     if not pd.api.types.is_datetime64_any_dtype(df[time_column]):
