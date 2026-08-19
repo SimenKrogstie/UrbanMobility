@@ -1,14 +1,13 @@
 import geopandas as gpd
 import pandas as pd
 
-
 def points_gdf(
-    trips_df: pd.DataFrame,
-    lat_col: str,
-    lon_col: str,
-    source_crs: str = "EPSG:4326",
-    target_crs: str = "EPSG:25833",
-) -> gpd.GeoDataFrame:
+        trips_df: pd.DataFrame,
+        lat_col: str,
+        lon_col: str,
+        source_crs: str = "EPSG:4326",
+        target_crs: str = "EPSG:25833",
+    ) -> gpd.GeoDataFrame:
     """
     Converts a DataFrame with coordinates to a GeoDataFrame with Shapely Point geometries.
 
@@ -38,7 +37,7 @@ def points_gdf(
     -------
     gdf : gpd.GeoDataFrame
         GeoDataFrame with point geometries and CRS set to "target_crs".
-
+    
     Raises
     ------
     KeyError
@@ -49,15 +48,13 @@ def points_gdf(
     """
     # Checks that both coordinate columns exist in trips_df
     if lat_col not in trips_df.columns or lon_col not in trips_df.columns:
-        raise KeyError(
-            f"{trips_df} is missing the columns {lat_col!r} and/or {lon_col!r}."
-        )
+        raise KeyError(f"{trips_df} is missing the columns {lat_col!r} and/or {lon_col!r}.")
 
     # Makes a GeoDataFrame based on trips_df
     gdf = gpd.GeoDataFrame(
         trips_df.copy(),
         geometry=gpd.points_from_xy(trips_df[lon_col], trips_df[lat_col]),
-        crs=source_crs,
+        crs=source_crs
     )
 
     # Transforms to target_crs

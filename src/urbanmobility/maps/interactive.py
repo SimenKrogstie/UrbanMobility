@@ -1,18 +1,18 @@
 import geopandas as gpd
 import folium
-from ..spatial.crs import CRS
+from ..crs import CRS
 
 
 def mobility_map(
-    mobility_gdf: gpd.GeoDataFrame,
-    buildings_gdf: gpd.GeoDataFrame,
-    district_a: str,
-    district_b: str,
-    choropleth_col: str = "total_trips_per_km2",
-    name_col: str = "bydel",
-    popup_cols: list[str] | None = None,
-    building_type_col: str = "building",
-    building_district_col: str = "bydel",
+        mobility_gdf: gpd.GeoDataFrame,
+        buildings_gdf: gpd.GeoDataFrame,
+        district_a: str,
+        district_b: str,
+        choropleth_col: str = "total_trips_per_km2",
+        name_col: str = "bydel",
+        popup_cols: list[str] | None = None,
+        building_type_col: str = "building",
+        building_district_col: str = "bydel",
 ) -> folium.Map:
     """
     Makes an interactive Folium map with mobility indicators and buildings
@@ -23,7 +23,7 @@ def mobility_map(
       mobility indicator.
     - Popup with selected columns (e.g., district name and indicator value).
     - A building layer colored by building type, filtered to the same
-      districts.
+      districts.    
 
     Parameters
     ----------
@@ -51,7 +51,7 @@ def mobility_map(
         Name of the column in "buildings_gdf" containing district names.
         Used to filter buildings to the districts specified by "district_a" and "district_b".
         Default is "bydel".
-
+    
     Returns
     -------
     m : folium.Map
@@ -67,9 +67,7 @@ def mobility_map(
     """
 
     # Ensures valid CRS
-    gdf = CRS(
-        mobility_gdf, target_crs="EPSG:4326", name="mobility_gdf", wgs84_missing=True
-    )
+    gdf = CRS(mobility_gdf, target_crs="EPSG:4326", name="mobility_gdf", wgs84_missing=True)
 
     # Resets index if needed
     if name_col not in gdf.columns and gdf.index.name == name_col:
@@ -85,10 +83,8 @@ def mobility_map(
     focus = [district_a, district_b]
     for b in focus:
         if b not in gdf[name_col].values:
-            raise KeyError(
-                f"District {b!r} does not exist in mobility_gdf[{name_col!r}]."
-            )
-
+            raise KeyError(f"District {b!r} does not exist in mobility_gdf[{name_col!r}].")
+        
     # Default popup
     if popup_cols is None:
         popup_cols = [name_col, choropleth_col]
@@ -104,7 +100,7 @@ def mobility_map(
             "Tiles © CARTO DB | "
             "Sykkelturer: © Oslo Bysykkel | "
             "Befolkningstall: © Oslo kommune / SSB"
-        ),
+        )
     )
 
     # Filter to focus districts
@@ -143,18 +139,11 @@ def mobility_map(
     ).add_to(m)
 
     # Ensures valid CRS
-    building = CRS(
-        buildings_gdf,
-        target_crs="EPSG:4326",
-        name="buildings_gdf",
-        wgs84_missing=True,
-    )
+    building = CRS(buildings_gdf, target_crs="EPSG:4326", name="buildings_gdf", wgs84_missing=True,)
 
     # Checks that specified districts exist in buildings_gdf
     if building_district_col not in building.columns:
-        raise KeyError(
-            f"Column {building_district_col!r} does not exist in buildings_gdf."
-        )
+        raise KeyError(f"Column {building_district_col!r} does not exist in buildings_gdf.")
     if building_type_col not in building.columns:
         raise KeyError(f"Column {building_type_col!r} does not exist in buildings_gdf.")
 
@@ -171,21 +160,13 @@ def mobility_map(
 
     # Fargemapping
     base_colors = [
-        "#1b9e77",
-        "#d95f02",
-        "#7570b3",
-        "#e7298a",
-        "#66a61e",
-        "#e6ab02",
-        "#a6761d",
-        "#666666",
-        "#1f78b4",
-        "#b2df8a",
-        "#fb9a99",
-        "#cab2d6",
+        "#1b9e77", "#d95f02", "#7570b3", "#e7298a",
+        "#66a61e", "#e6ab02", "#a6761d", "#666666",
+        "#1f78b4", "#b2df8a", "#fb9a99", "#cab2d6",
     ]
     type_to_color = {
-        t: base_colors[i % len(base_colors)] for i, t in enumerate(building_types)
+        t: base_colors[i % len(base_colors)]
+        for i, t in enumerate(building_types)
     }
 
     # Separate layer for building types
@@ -210,5 +191,6 @@ def mobility_map(
 
     fg_building.add_to(m)
 
+    
     folium.LayerControl(collapsed=False).add_to(m)
     return m
