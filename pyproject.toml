@@ -1,0 +1,39 @@
+[project]
+name = "urbanmobility"
+version = "0.1.0"
+description = "A Python package for processing, analyzing, and visualizing urban mobility data"
+readme = "README.md"
+authors = [
+    { name = "Simen Krogstie", email = "simenkrogstie@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "folium>=0.20.0",
+    "geopandas>=1.1.4",
+    "jupyter>=1.1.1",
+    "matplotlib>=3.11.1",
+    "numpy>=2.5.1",
+    "osmnx>=2.1.1",
+    "pandas>=3.0.3",
+]
+
+[build-system]
+requires = ["uv_build>=0.11.29,<0.12.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-root = "src"
+module-name = "urbanmobility"
+
+[dependency-groups]
+dev = [
+    "pyright>=1.1.411",
+    "pytest>=9.1.1",
+    "ruff>=0.15.22",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 88

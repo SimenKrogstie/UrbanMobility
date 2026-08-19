@@ -1,12 +1,14 @@
-
 def add_choropleth():
-    return pass
+    return
+
 
 def add_buildings():
-    return pass
+    return
+
 
 def add_popups():
-    return pass
+    return
+
 
 def add_focus_districts():
-    return pass
+    return

@@ -13,6 +13,9 @@ htmlcov/
 logs/
 
 # --- Environment / secrets ---
+.venv/
+venv/
+env/
 .env
 .env.*
 !.env.example
@@ -40,6 +43,9 @@ models/
 cache/
 .cache/
 __pycache__/
+*.py[cod]
+*$py.class
+.ruff_cache
 
 # --- OS files ---
 .DS_Store
@@ -55,3 +61,9 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+# -- uv --
+.uv/
+
+# -- Python packages --
+dist/
